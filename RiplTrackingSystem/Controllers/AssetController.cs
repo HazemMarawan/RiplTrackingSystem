@@ -23,7 +23,7 @@ namespace RiplTrackingSystem.Controllers
     {
         DBContext db = new DBContext();
         // GET: Asset
-        public ActionResult Index()
+        public ActionResult Index() //hazem
         {
             User currentUser = Session["user"] as User;
 
