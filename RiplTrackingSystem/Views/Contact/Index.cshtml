@@ -1,0 +1,100 @@
+﻿@model IEnumerable<RiplTrackingSystem.ViewModel.UserViewModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int i = 1;
+}
+
+<div class="page-header">
+    <nav class="breadcrumb-one" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="javascript:void(0);">Apps</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a href="javascript:void(0);">Contacts</a></li>
+        </ol>
+    </nav>
+</div>
+<div class="row layout-spacing layout-top-spacing" id="cancel-row">
+    <div class="col-lg-12">
+        <div class="widget-content searchable-container list">
+
+            <div class="row">
+                <div class="col-xl-4 col-lg-5 col-md-5 col-sm-7 filtered-list-search layout-spacing align-self-center">
+                    <form class="form-inline my-2 my-lg-0">
+                        <div class="">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            <input type="text" class="form-control product-search" id="input-search" placeholder="Search Contacts...">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-xl-8 col-lg-7 col-md-7 col-sm-5 text-sm-right text-center layout-spacing align-self-center">
+                    <div class="d-flex justify-content-sm-end justify-content-center">
+
+                        <div class="switch align-self-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list view-list active-view"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid view-grid"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        </div>
+                    </div>
+
+                  
+                </div>
+            </div>
+
+            <div class="searchable-items list">
+               
+                @foreach(var contact in Model)
+                {
+                <div class="items">
+                    <div class="item-content">
+                        <div class="user-profile">
+                            <div class="n-chk align-self-center text-center">
+                                <label class="new-control new-checkbox checkbox-primary">
+                                    @i
+                                </label>
+                            </div>
+                            @if (!String.IsNullOrEmpty(contact.imagePath))
+                            {
+                                <img src="@contact.imagePath" width="90" height="90" alt="avatar">
+                            }
+                            else
+                            {
+                                <img src="~/images/userProfile.jpeg"  width="90" height="90" alt="avatar">
+
+                            }
+                            <div class="user-meta-info">
+                                <p class="user-name" data-name="@contact.full_name">@contact.full_name</p>
+                            </div>
+                        </div>
+                        <div class="user-email">
+                            <p class="info-title">Email: </p>
+                            <p class="usr-email-addr" data-email="@contact.email">@contact.email</p>
+                        </div>
+                        <div class="user-location">
+                            <p class="info-title">Location: </p>
+                            @if (String.IsNullOrEmpty(contact.stringLocation))
+                            {
+                                <p class="usr-location" data-location="RIPL">RIPL</p>
+                            }
+                            else
+                            {
+                                <p class="usr-location" data-location="@contact.stringLocation">@contact.stringLocation</p>
+                            }
+                        </div>
+                        <div class="user-phone">
+                            <p class="info-title">Phone: </p>
+                            <p class="usr-ph-no" data-phone="@contact.phone1">@contact.phone1</p>
+                        </div>
+                
+                    </div>
+                </div>
+                    i++;
+                }
+
+             
+            </div>
+
+        </div>
+    </div>
+</div>
+      
+

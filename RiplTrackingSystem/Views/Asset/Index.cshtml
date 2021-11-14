@@ -1,0 +1,370 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="modal fade" id="manage_asset_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <form action="" method="post" enctype='multipart/form-data'>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal_title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-body">
+                        <div class="form-row">
+                            <input type="hidden" name="id" id="id" value="0" />
+                            <div class="form-group col-md-6">
+                                <label>Tag ID</label>
+                                <input required name="tag_id" id="tag_id" type="text" class="form-control radius-30" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Color</label>
+                                <input type="text" name="color" id="color" class="form-control radius-30" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Type</label>
+                                <input type="text" name="type" id="type" class="form-control radius-30" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="import_asset_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <form action="" method="post" enctype='multipart/form-data'>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal_title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-body">
+                        <div class="form-row">
+                            <input type="hidden" name="id" id="id" value="0" />
+                            <div class="form-group col-md-6">
+                                <label>Select Sheet</label>
+                                <input required name="file" id="file" type="file" class="form-control radius-30" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="page-header">
+    <nav class="breadcrumb-one" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="javascript:void(0);">Assets</a></li>
+        </ol>
+    </nav>
+    <div class="dropdown filter custom-dropdown-icon">
+        <a class="dropdown-toggle btn" href="#" role="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="text">More</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg></a>
+
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="filterDropdown">
+            <a class="dropdown-item" id="add_asset" data-value="<span>Show</span> : Add User" href="javascript:void(0);">Add Asset</a>
+            <a class="dropdown-item" id="export_asset_report" data-value="<span>Show</span> : Export Assets Sheet Report" href="javascript:void(0);">Export Assets Report</a>
+            <a class="dropdown-item" id="export_asset" data-value="<span>Show</span> : Export Assets Sheet Template" href="@Url.Action("ExportAssetsSheetTempalte","Asset")">Export Assets Sheet Template</a>
+            <a class="dropdown-item" id="import_asset" data-value="<span>Show</span> : Import Assets Sheet Template" href="javascript:void(0);">Import Assets Sheet Template</a>
+        </div>
+    </div>
+</div>
+
+
+<form action="" id="filter_form" method="post">
+    <div class="row">
+        <div class="form-group col-3">
+            <input class="form-control" type="text" id="text_search" name="text_search" placeholder="Search">
+        </div>
+        <div class="form-group col-3">
+            <input class="form-control" type="text" id="asset_type" name="asset_type" placeholder="Type">
+        </div>
+        <div class="form-group col-3">
+            <input class="form-control" type="text" id="asset_color" name="asset_color" placeholder="Color">
+        </div>
+        <div class="form-group col-md-3">
+            @Html.DropDownList("user_id", new SelectList(ViewBag.users, "id", "full_name"), "Select User", new { @class = "form-control", @name = "user_id", @id = "user_id" })
+        </div>
+        <div class="form-group col-3">
+            <input class="form-control" type="date" id="from_date" name="from_date">
+        </div>
+        <div class="form-group col-3">
+            <input class="form-control" type="date" id="to_date" name="to_date">
+        </div>
+        <div class="form-group col-3">
+            <select name="asset_status" class="form-control">
+                <option value="1">All</option>
+                <option value="2">Available</option>
+            </select>
+        </div>
+        <div class="form-group col-3">
+            <select name="visibility_status" id="visibility_status" class="form-control">
+                <option value="">Select Visibility</option>
+                <option value="1" selected>Active</option>
+                <option value="0">Not Actie</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button id="search" type="button" class="btn btn-primary px-3 radius-30">Search</button>
+        </div>
+        <div class="form-group col-3">
+            <button id="reset" type="reset" class="btn btn-danger px-3 radius-30">Reset</button>
+        </div>
+
+    </div>
+</form>
+
+
+<div class="card">
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table id="assetTable" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tag</th>
+                        <th>Color</th>
+                        <th>Type</th>
+                        <th>Manufactured Date</th>
+                        <th>Active</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script>
+       $(document).ready(function () {
+
+           var datatable = $('#assetTable')
+                .DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "scrollX": true,
+                    "stateSave": false,
+                    "lengthChange": false,
+                    "dom": 'Bfrtip',
+
+                    "buttons": ['copy', 'excel', 'pdf', 'print'],
+                    "pageLength":10,
+                    "rowId": 'id',
+                    "ajax": {
+                        "url": "@Url.Action("Index", "Asset")",
+                        "type": "POST",
+                        "datatype": "json",
+                        "dataSrc": "data"
+                    },
+                    "columns": [
+                        {
+                            "data": "id",
+                            "searchable": true
+                        },
+                        {
+                            "data": "tag_id",
+                            "searchable": true
+                        },
+                        {
+                            "data": "color",
+                            "searchable": true
+                        },
+                        {
+                            "data": "type",
+                            "searchable": true
+                        },
+                        {
+                            "data": "string_created_at",
+                            "searchable": true
+                        },
+                        {
+                            "data": "active", "searchable": true,
+                            fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                                var html = "";
+                                if (oData.active == 1) {
+                                    html += "<span class='badge badge-success'>Yes</span>";
+                                }
+                                else {
+                                    html += "<span class='badge badge-danger'>No</span>";
+                                }
+                                $(nTd).html("<span class='action-column'>" + html + "</span>");
+                            }
+                        },
+                        {
+                            "data": "id", "searchable": true,
+                            fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                                var html = "";
+
+                                html += "<a class='edit' id='" + oData.id + "' href='javascript:void(0)' title='Edit'><i class='far fa-edit'></i></a>&nbsp;";
+                                if (oData.active == 1)
+                                    html += "<a class='delete' href='javascript:void(0)' title='Delete'><i class='fas fa-trash'></i></a>";
+                                else
+                                    html += "<a class='restore' href='javascript:void(0)' title='Restore'><i class='fas fa-undo'></i></a>";
+                                $(nTd).html("<span class='action-column'>" + html + "</span>");
+                            }
+                        },
+                    ]
+                });
+            
+            $('#search').on('click', function () {
+                datatable.search($("#text_search").val());
+                datatable.columns(0).search($("#asset_type").val());
+                datatable.columns(1).search($("#asset_color").val());
+                datatable.columns(2).search($("#user_id").val());
+                datatable.columns(3).search($("#from_date").val());
+                datatable.columns(4).search($("#to_date").val());
+                datatable.columns(5).search($("#visibility_status").val());
+
+                datatable.draw();
+            });
+
+            $('#text_search').on('keyup', function (e) {
+                if (e.keyCode == 13)
+                    $('#search_button').trigger('click');
+            });
+
+            $('#reset').on('click', function () {
+                $("#text_search").val("");
+
+                $('#search').trigger('click');
+
+            });
+
+           $(document).on("click", "#export_asset_report", function () {
+               var action = '@Url.Action("AssetsReport", "Report")';
+               $('#filter_form').attr('action', action);
+               $('#filter_form').submit();
+           });
+
+           $("#add_asset").click(function () {
+               var modal = $('#manage_asset_modal').clone();
+                var action = '@Url.Action("saveAsset", "Asset")';
+                modal.find('form').attr('action', action);
+                modal.find('#modal_title').text('Add Asset');
+                modal.execModal({
+                    progressBar: 'progress_bar',
+                    progressText: 'progress_text',
+                }, function (response) {
+
+                        datatable.draw();
+
+                }, function (response) {
+
+                }, function (dialog) {
+
+                });
+            });
+
+           $("#import_asset").click(function () {
+               var modal = $('#import_asset_modal').clone();
+                var action = '@Url.Action("ImportExcel", "Asset")';
+                modal.find('form').attr('action', action);
+                modal.find('#modal_title').text('Add Asset');
+                modal.execModal({
+                    progressBar: 'progress_bar',
+                    progressText: 'progress_text',
+                }, function (response) {
+
+                        table.draw();
+
+                }, function (response) {
+
+                }, function (dialog) {
+
+                });
+            });
+
+            $(document).on("click", ".edit", function () {
+                var data = datatable.row($(this).closest('tr')).data();
+                console.log(data);
+                var modal = $('#manage_asset_modal').clone();
+                var action = '@Url.Action("saveAsset", "Asset")';
+                modal.find('form').attr('action', action);
+                modal.find('#modal_title').text('Edit Asset');
+                modal.execModal({
+                    progressBar: 'progress_bar',
+                    progressText: 'progress_text',
+                }, function (response) {
+                        datatable.draw();
+
+                }, function (response) {
+
+                }, function (dialog) {
+                        dialog.find('#id').val(data.id);
+                        dialog.find('#tag_id').val(data.tag_id);
+                        dialog.find('#type').val(data.type);
+                        dialog.find('#color').val(data.color);
+
+                        //dialog.find('#status option[value=' + data.status + ']').attr('selected', 'selected');
+
+
+                });
+
+            });
+
+            $(document).on("click", ".delete", function () {
+                var data = datatable.row($(this).closest('tr')).data();
+                warningBox("Are you sure you want to delete this Asset (<b>" + data.tag_id +"</b>) ?", function () {
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Action("deleteAsset", "Asset")',
+                        contentType: "application/json; charset=utf-8",
+                        data: { "id": data.id },
+                        datatype: "json",
+                        success: function (data) {
+                            datatable.draw();
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+                });
+            });
+
+           $(document).on("click", ".restore", function () {
+                var data = datatable.row($(this).closest('tr')).data();
+                warningBox("Are you sure you want to Restore this Asset (<b>" + data.tag_id +"</b>) ?", function () {
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Action("restoreAsset", "Asset")',
+                        contentType: "application/json; charset=utf-8",
+                        data: { "id": data.id },
+                        datatype: "json",
+                        success: function (data) {
+                            datatable.draw();
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+                });
+
+
+            });
+        });
+
+    </script>
+}
+

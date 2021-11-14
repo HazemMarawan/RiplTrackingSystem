@@ -1,0 +1,741 @@
+﻿@using RiplTrackingSystem.Models;
+@using RiplTrackingSystem.ViewModel;
+
+@{
+    User currrentUser = Session["user"] as User;
+    DBContext db = new DBContext();
+    var requests = (from request in db.requests
+                    join location in db.locations on request.location_id equals location.id
+                    join user in db.users on request.created_by equals user.id
+                    select new RequestViewModel
+                    {
+                        id = request.id,
+                        stringLocation = location.name,
+
+                        number_of_assets = request.number_of_assets,
+                        location_id = request.location_id,
+                        notes = request.notes,
+                        stringUser = user.full_name,
+                        stringType = request.type == 1 ? "New" : "Return",
+                        stringCreated_at = request.created_at.ToString()
+
+
+                    });
+    if (currrentUser.location_id != null)
+    {
+        Location userLocation = db.locations.Find(currrentUser.location_id);
+        if (userLocation.type == (int)LocationType.Company)
+        {
+            requests = requests.Where(m => m.location_id == userLocation.id);
+        }
+        else
+        {
+            requests = requests.Where(m => m.location_id == -1);
+        }
+    }
+
+    int userType = 1;
+    if(currrentUser.location_id != null)
+    {
+        Location userLocaiton = db.locations.Where(s => s.id == currrentUser.location_id).FirstOrDefault();
+        if(userLocaiton.type == (int)LocationType.Company)
+        {
+            userType = 2;
+        }
+    }
+    else
+    {
+        userType = 3;
+    }
+
+    var allRequests = requests.Take(4).ToList();
+
+    List<TranscationViewModel> transactions = (from transaction in db.transcactions
+                                               join user in db.users on transaction.created_by equals user.id
+                                               join from_location in db.locations on transaction.from_location equals from_location.id
+                                               join to_location in db.locations on transaction.to_location equals to_location.id
+                                               join recieveUser in db.users on transaction.recieved_by equals recieveUser.id into recievedByUser
+                                               from recievedByUserData in recievedByUser.DefaultIfEmpty()
+
+                                               select new TranscationViewModel
+                                               {
+                                                   id = transaction.id,
+                                                   from_location = transaction.from_location,
+                                                   stringFromLocation = from_location.name,
+                                                   stringToLocation = to_location.name,
+                                                   to_location = transaction.to_location,
+                                                   created_by = transaction.created_by,
+                                                   created_at = transaction.created_at,
+                                                   working_date = transaction.working_date,
+                                                   stringWorking_date = transaction.working_date.ToString(),
+                                                   status = transaction.status,
+                                                   notes = transaction.notes,
+                                                   stringUser = user.full_name,
+                                                   stringRecievedBy = (recievedByUserData != null) ? recievedByUserData.full_name : null,
+                                                   assetes_count = transaction.assetes_count,
+                                                   stringCreated_at = transaction.created_at.ToString(),
+                                                   attachments = db.transactionFiles.Where(t => t.transcaction_id == transaction.id).Select(t => new TransactionFileViewModel
+                                                   {
+                                                       path = t.path
+                                                   }).ToList()
+
+                                               }).Where(s => s.to_location == currrentUser.location_id).Take(5).ToList();
+
+    List<LocationAttachmentViewModel> locaitonAttachments = new List<LocationAttachmentViewModel>();
+    if(currrentUser.location_id != null)
+    {
+        locaitonAttachments = (from locationAttachment in db.locationAttachments
+                               join location in db.locations on locationAttachment.location_id equals location.id
+                               join user in db.users on locationAttachment.created_by equals user.id
+                               select new LocationAttachmentViewModel
+                               {
+                                   id = locationAttachment.id,
+                                   company_name = location.name,
+                                   path = locationAttachment.path,
+                                   description = locationAttachment.description,
+                                   string_created_by = user.full_name,
+                                   string_created_at = locationAttachment.created_at.ToString(),
+                                   location_id = location.id,
+                                   active = locationAttachment.active,
+                                   type = location.type
+                               }).Where(l => l.active == 1 && l.location_id == currrentUser.location_id && l.type == (int)LocationType.Company).ToList();
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
+    <title>Ripl Tracking System</title>
+    <link rel="icon" type="image/x-icon" href="~/Content/assets/img/favicon.ico" />
+    <link href="~/Content/assets/css/loader.css" rel="stylesheet" type="text/css" />
+    <script src="~/Content/assets/js/loader.js"></script>
+
+
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:400,500,600,700&display=swap" rel="stylesheet">
+    <link href="~/Content/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/assets/css/plugins.css" rel="stylesheet" type="text/css" />
+
+    <link href="~/Content/plugins/apex/apexcharts.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/css/dashboard/dash_2.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" type="text/css" href="~/Content/plugins/table/datatable/datatables.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/plugins/table/datatable/custom_dt_html5.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/plugins/table/datatable/dt-global_style.css">
+    <link href="~/Content/google-fonts.css" rel="stylesheet" />
+    <link href="~/Content/fontawesome/css/all.css" rel="stylesheet" />
+    <link href="~/Content/selectize.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/plugins/font-icons/fontawesome/css/regular.css">
+    <link rel="stylesheet" href="~/Content/plugins/font-icons/fontawesome/css/fontawesome.css">
+
+    <link rel="stylesheet" type="text/css" href="~/Content/plugins/editors/quill/quill.snow.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/assets/css/forms/theme-checkbox-radio.css">
+
+    <link href="~/Content/assets/css/apps/mailbox.css" rel="stylesheet" type="text/css" />
+    <script src="~/Content/plugins/sweetalerts/promise-polyfill.js"></script>
+    <link href="~/Content/plugins/sweetalerts/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/plugins/sweetalerts/sweetalert.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/plugins/notification/snackbar/snackbar.min.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" type="text/css" href="~/Content/assets/css/forms/theme-checkbox-radio.css">
+    <link href="~/Content/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/assets/css/apps/contacts.css" rel="stylesheet" type="text/css" />
+
+    <link href="~/Content/assets/css/apps/notes.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/assets/css/forms/theme-checkbox-radio.css" rel="stylesheet" type="text/css" />
+
+    <link href="~/Content/assets/css/apps/scrumboard.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/assets/css/forms/theme-checkbox-radio.css" rel="stylesheet" type="text/css">
+
+    <link href="~/Content/assets/css/dashboard/dash_1.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="alt-menu sidebar-noneoverflow">
+    <!-- BEGIN LOADER -->
+    <div id="load_screen">
+        <div class="loader">
+            <div class="loader-content">
+                <div class="spinner-grow align-self-center"></div>
+            </div>
+        </div>
+    </div>
+    <!--  END LOADER -->
+    <!--  BEGIN NAVBAR  -->
+    <div class="header-container">
+        <header class="header navbar navbar-expand-sm">
+
+            <a href="javascript:void(0);" class="sidebarCollapse" data-placement="bottom"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></a>
+
+            <div class="nav-logo align-self-center">
+                <a class="navbar-brand" href="@Url.Action("Index","Home")"><img alt="logo" src="~/images/ripl_logo.jpg"> <span class="navbar-brand-name">RIPL</span></a>
+            </div>
+            <ul class="navbar-item flex-row mr-auto">
+                <li class="nav-item align-self-center search-animated">
+                    <form class="form-inline search-full form-inline search" role="search">
+                        <div class="search-bar">
+                            <input type="hidden" class="form-control search-form-control  ml-lg-auto" placeholder="Search...">
+                        </div>
+                    </form>
+                </li>
+            </ul>
+            <ul class="navbar-item flex-row nav-dropdowns" style="float:right;">
+                <li class="nav-item dropdown language-dropdown more-dropdown">
+                    <div class="dropdown custom-dropdown-icon">
+
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown message-dropdown">
+
+                    <div class="dropdown-menu p-0 position-absolute" aria-labelledby="messageDropdown">
+
+                    </div>
+                </li>
+
+                @if (RiplTrackingSystem.Auth.can.hasPermission("access_notifications"))
+                {
+                    <li class="nav-item dropdown notification-dropdown" title="Requests">
+                        <a href="javascript:void(0);" class="nav-link dropdown-toggle" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg><span class="badge badge-success"></span>
+                        </a>
+                        <div class="dropdown-menu position-absolute" aria-labelledby="notificationDropdown">
+                            <div class="notification-scroll">
+                                @foreach (var r in allRequests)
+                                {
+                                    string RequestUrl = String.Empty;
+                                    if (r.type == 1)
+                                    {
+                                        RequestUrl = Url.Action("send", "LocationAsset");
+                                    }
+                                    <div class="dropdown-item">
+                                        <div class="media server-log">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-server"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6" y2="6"></line><line x1="6" y1="18" x2="6" y2="18"></line></svg>
+                                            <div class="media-body">
+                                                <div class="data-info">
+                                                    <a href="@RequestUrl" target="_blank"><h6 class="">@r.notes</h6></a>
+                                                    <a href="@RequestUrl" target="_blank"><p class="">@r.stringLocation | @r.stringType</p></a>
+                                                    <a href="@RequestUrl" target="_blank"><p class="">@r.stringUser</p></a>
+                                                    <a href="@RequestUrl" target="_blank"><p class="">@r.created_at</p></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="dropdown-item">
+                                    <div class="media server-log">
+                                        <div class="media-body">
+                                            <div class="data-info">
+                                                <h6 class=""><a href="@Url.Action("Index","Request")">Show All</a></h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                }
+
+                @if (currrentUser.location_id != null)
+                {
+                    <li class="nav-item dropdown notification-dropdown"  title="Transactions">
+                        <a href="javascript:void(0);" class="nav-link dropdown-toggle" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg><span class="badge badge-success"></span>
+                        </a>
+                        <div class="dropdown-menu position-absolute" aria-labelledby="notificationDropdown">
+                            <div class="notification-scroll">
+                                @foreach (var transaction in transactions)
+                                {
+                                    <div class="dropdown-item">
+                                        <div class="media server-log">
+                                            <a target="_blank" href="@Url.Action("openTransaction","LocationAsset",new { id= transaction.id})">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-server"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6" y2="6"></line><line x1="6" y1="18" x2="6" y2="18"></line></svg>
+                                            </a>    
+                                                <div class="media-body">
+                                                    <div class="data-info">
+                                                        <a target="_blank" href="@Url.Action("openTransaction","LocationAsset",new { id= transaction.id})"><h6 class="">@transaction.stringFromLocation</h6></a>
+                                                        <a target="_blank" href="@Url.Action("openTransaction","LocationAsset",new { id= transaction.id})"><p class="">@transaction.stringUser</p></a>
+                                                        <a target="_blank" href="@Url.Action("openTransaction","LocationAsset",new { id= transaction.id})"><p class="">@transaction.created_at</p></a>
+                                                        <a target="_blank" href="@Url.Action("openTransaction","LocationAsset",new { id= transaction.id})"><p class="">@transaction.assetes_count Assets</p></a>
+                                                    </div>
+                                                </div>
+</div>
+                                    </div>
+                                }
+                                <div class="dropdown-item">
+                                    <div class="media server-log">
+                                        <div class="media-body">
+                                            <div class="data-info">
+                                                <h6 class=""><a href="@Url.Action("Index","Transaction")">Show All</a></h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                }
+                @if (userType == 2)
+                {
+                    <li class="nav-item dropdown notification-dropdown" title="Attachments">
+                        <a href="javascript:void(0);" class="nav-link dropdown-toggle" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg><span class="badge badge-success"></span>
+                        </a>
+                        <div class="dropdown-menu position-absolute" aria-labelledby="notificationDropdown">
+                            <div class="notification-scroll">
+                                @foreach (var attachment in locaitonAttachments)
+                                {
+                                    <div class="dropdown-item">
+                                        <div class="media server-log">
+                                            <img src="@attachment.path" width="40" height="40" />
+                                     
+                                                <div class="media-body">
+                                                    <div class="data-info">
+                                                        <a target="_blank" href="@attachment.path"><h6 class="location_attachment">@attachment.description</h6></a>
+                                                    </div>
+                                                </div>
+</div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </li>
+                }
+                <li class="nav-item dropdown user-profile-dropdown order-lg-0 order-1">
+                    <a href="javascript:void(0);" class="nav-link dropdown-toggle user" id="user-profile-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="media">
+                            <div class="media-body align-self-center">
+                                <h6>@Session["user_name"].ToString()</h6>
+                            </div>
+                            <img src="~/images/userProfile.jpeg" class="img-fluid">
+                            @*@if (!String.IsNullOrWhiteSpace(Session["image"].ToString()))
+                    {
+                        <img src="@Session["image"].ToString()" class="img-fluid">
+                    }
+                    else
+                    {
+                        <img src="~/images/userProfile.jpeg" class="img-fluid">
+
+                    }*@
+                            <span class="badge badge-success"></span>
+                        </div>
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="userProfileDropdown">
+
+                        <div class="dropdown-item">
+                            <a href="@Url.Action("Logout","Account")">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> <span>Log Out</span>
+                            </a>
+                        </div>
+                    </div>
+
+                </li>
+            </ul>
+        </header>
+    </div>
+    <!--  END NAVBAR  -->
+    <!--  BEGIN MAIN CONTAINER  -->
+    <div class="main-container" id="container">
+
+        <div class="overlay"></div>
+        <div class="search-overlay"></div>
+
+        <!--  BEGIN TOPBAR  -->
+        <div class="topbar-nav header navbar" role="banner">
+            <nav id="topbar">
+                <ul class="navbar-nav theme-brand flex-row  text-center">
+                    <li class="nav-item theme-logo">
+                        <a href="@Url.Action("Index","Home")">
+                            <img src="~/images/ripl_logo.jpg" class="navbar-logo" alt="logo">
+                        </a>
+                    </li>
+                    <li class="nav-item theme-text">
+                        <a href="@Url.Action("Index","Home")" class="nav-link"> Ripl </a>
+                    </li>
+                </ul>
+
+                <ul class="list-unstyled menu-categories" id="topAccordion">
+
+                    <li class="menu single-menu active">
+                        <a href="@Url.Action("Index","Home")" class="dropdown-toggle autodroprown">
+                            <div class="">
+                                <i class='fa fa-home'></i>
+                            </div>
+                        </a>
+                    </li>
+                    @if (RiplTrackingSystem.Auth.can.hasPermission("access_log"))
+                    {
+                        <li class="menu single-menu">
+                            <a href="@Url.Action("Index", "Log")" class="dropdown-toggle autodroprown">
+                                <div class="">
+                                    <i class="fas fa-history"></i>
+                                    <span>Activity Log</span>
+
+                                </div>
+                            </a>
+                        </li>
+                    }
+
+                    @if (RiplTrackingSystem.Auth.can.hasPermission("access_user"))
+                    {
+                        <li class="menu single-menu">
+                            <a href="#users" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                                <div class="">
+                                    <i class='fa fa-user'></i>
+                                    <span>Users Management</span>
+                                </div>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </a>
+                            <ul class="collapse submenu list-unstyled" id="users" data-parent="#topAccordion">
+                                @if (RiplTrackingSystem.Auth.can.hasPermission("access_user"))
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Index", "Group")">Groups</a>
+                                    </li>
+                                }
+                                @if (RiplTrackingSystem.Auth.can.hasPermission("access_permission"))
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Index", "Permission")">Permissions</a>
+                                    </li>
+                                }
+                                @if (RiplTrackingSystem.Auth.can.hasPermission("access_role"))
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Show", "Role")">Roles</a>
+                                    </li>
+                                }
+                                @if (RiplTrackingSystem.Auth.can.hasPermission("access_user"))
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Index", "User")">Users</a>
+                                    </li>
+                                }
+
+                            </ul>
+                        </li>
+                    }
+                    <li class="menu single-menu">
+                        <a href="#app" data-toggle="collapse" aria-expanded="true" class="dropdown-toggle">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-cpu"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
+                                <span>Apps</span>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </a>
+                        <ul class="collapse submenu list-unstyled" id="app" data-parent="#topAccordion">
+                            <li>
+                                <a href="@Url.Action("Index","Mail")"> Mailbox </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index","Contact")"> Contacts </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index","Note")"> Notes </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index","Task")"> Task List </a>
+                            </li>
+                            @if(currrentUser.location_id == null)
+                            { 
+                                <li>
+                                    <a href="@Url.Action("Index","LocationAttachment")"> Invoices </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                    @if (RiplTrackingSystem.Auth.can.hasPermission("access_location") || RiplTrackingSystem.Auth.can.hasPermission("access_manage_assets"))
+                    {
+                        <li class="menu single-menu">
+                            <a href="#location_assets" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                                <div class="">
+                                    <i class='fas fa-sync-alt'></i>
+                                    <span>Location/Assets</span>
+                                </div>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </a>
+                            <ul class="collapse submenu list-unstyled" id="location_assets" data-parent="#topAccordion">
+                                @if (RiplTrackingSystem.Auth.can.hasPermission("access_location"))
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Index", "Location")">Locations</a>
+                                    </li>
+                                }
+                                @if (RiplTrackingSystem.Auth.can.hasPermission("access_asset"))
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Index", "Asset")">Assets</a>
+                                    </li>
+                                }
+                                @if (RiplTrackingSystem.Auth.can.hasPermission("availabe_assets"))
+                                {
+                                    <li>
+                                        <a href="@Url.Action("availabeAssets", "Asset")">Available Assets</a>
+                                    </li>
+                                }
+                                @if (RiplTrackingSystem.Auth.can.hasPermission("access_manage_assets"))
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Index", "ReceiveAsset")">Track Assets</a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                    @if (RiplTrackingSystem.Auth.can.hasPermission("access_ripl_order"))
+                    {
+                        <li class="menu single-menu">
+                            <a href="@Url.Action("Index", "SendAsset")" class="dropdown-toggle autodroprown">
+                                <div class="">
+                                    <i class="fas fa-history"></i>
+                                    <span>Orders</span>
+
+                                </div>
+                            </a>
+                        </li>
+                    }
+
+                    @if (RiplTrackingSystem.Auth.can.hasPermission("access_transcations"))
+                    {
+                        <li class="menu single-menu">
+                            <a href="@Url.Action("Index", "Transaction")" class="dropdown-toggle autodroprown">
+                                <div class="">
+                                    <i class="fas fa-sync-alt"></i>
+                                    <span>Transactions</span>
+
+                                </div>
+                            </a>
+                        </li>
+                    }
+
+                    @if (RiplTrackingSystem.Auth.can.hasPermission("access_manage_lost"))
+                    {
+                        <li class="menu single-menu">
+                            <a href="@Url.Action("ManageLost", "Asset")" class="dropdown-toggle autodroprown">
+                                <div class="">
+                                    <i class="fas fa-sync-alt"></i>
+                                    <span>Manage Lost</span>
+
+                                </div>
+                            </a>
+                        </li>
+                    }
+
+                    @if (RiplTrackingSystem.Auth.can.hasPermission("recieve_assets") || RiplTrackingSystem.Auth.can.hasPermission("send_assets"))
+                    {
+                        <li class="menu single-menu">
+                            <a href="#send_recieve" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                                <div class="">
+                                    <i class='fas fa-sync-alt'></i>
+                                    <span>Send/Recieve</span>
+                                </div>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </a>
+                            <ul class="collapse submenu list-unstyled" id="send_recieve" data-parent="#topAccordion">
+                                @if (RiplTrackingSystem.Auth.can.hasPermission("send_assets"))
+                                {
+                                    <li>
+                                        <a href="@Url.Action("send", "LocationAsset")">Send</a>
+                                    </li>
+                                }
+                                @if (RiplTrackingSystem.Auth.can.hasPermission("receive_assets"))
+                                {
+                                    <li>
+                                        <a href="@Url.Action("recieve", "LocationAsset")">Recieve</a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+                    @if (RiplTrackingSystem.Auth.can.hasPermission("access_request"))
+                    {
+
+                        <li class="menu single-menu">
+
+                            <a href="#request" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                                <div class="">
+
+                                    <i class='fas fa-sync-alt'></i>
+                                    <span>Request</span>
+                                </div>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </a>
+                            <ul class="collapse submenu list-unstyled" id="request" data-parent="#topAccordion">
+                                @if (RiplTrackingSystem.Auth.can.hasPermission("make"))
+                                {
+                                    <li>
+                                        <a id="request_assets" href="javascript:void(0)">Request</a>
+                                    </li>
+                                }
+                                @if (RiplTrackingSystem.Auth.can.hasPermission("access_request"))
+                                {
+                                    <li>
+                                        <a href="@Url.Action("index", "Request")">List</a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+                    @if (RiplTrackingSystem.Auth.can.hasPermission("access_reports"))
+                    {
+
+                        <li class="menu single-menu">
+
+                            <a href="#request" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                                <div class="">
+
+                                    <i class='fas fa-sync-alt'></i>
+                                    <span>Reports</span>
+                                </div>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </a>
+                            <ul class="collapse submenu list-unstyled" id="request" data-parent="#topAccordion">
+
+
+                                <li>
+                                    <a href="@Url.Action("Orders","Report")">Orders</a>
+                                </li>
+
+                                <li>
+                                    <a href="@Url.Action("Assets","Report")">Assets</a>
+                                </li>
+
+                                <li>
+                                    <a href="@Url.Action("AssetTracking","Report")">Assets Tracking</a>
+                                </li>
+
+                                <li>
+                                    <a href="@Url.Action("Requests","Report")">Requests</a>
+                                </li>
+
+                                <li>
+                                    <a href="@Url.Action("Locations","Report")">Locations</a>
+                                </li>
+
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+
+        <div id="content" class="main-content">
+            <div class="layout-px-spacing">
+                <div class="modal fade" id="request_assets_from_ripl" tabindex="-1" role="dialog" aria-hidden="true">
+                    <form action="" method="post" enctype='multipart/form-data'>
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modal_title">Request Assets from RIPL</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-body">
+                                        <div class="form-row">
+                                            <input type="hidden" name="id" id="id" value="0" />
+                                            <div class="form-group col-md-12">
+                                                <label>Type</label>
+                                                <select name="type" id="type" class="form-control radius-30">
+                                                    <option value="1">New</option>
+                                                    <option value="2">Return</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label>Number Of Assets</label>
+                                                <input required name="number_of_assets" id="number_of_assets" type="number" class="form-control radius-30" />
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label>Notes</label>
+                                                <input required name="notes" id="notes" type="text" class="form-control radius-30" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                @RenderBody()
+
+
+                <div class="footer-wrapper">
+                    <div class="footer-section f-section-1">
+                        <p class="">Copyright © @DateTime.Now.Year <a href="#" target="_blank"></a> All rights reserved.</p>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+    <script src="~/Content/assets/js/libs/jquery-3.1.1.min.js"></script>
+    <script src="~/Content/bootstrap/js/popper.min.js"></script>
+    <script src="~/Content/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Content/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="~/Content/assets/js/app.js"></script>
+    <script>
+            $(document).ready(function () {
+                App.init();
+                $("#request_assets").click(function () {
+                    var modal = $('#request_assets_from_ripl').clone();
+                    var action = '@Url.Action("save", "Request")';
+                    modal.find('form').attr('action', action);
+                    modal.execModal({
+                        progressBar: 'progress_bar',
+                        progressText: 'progress_text',
+                    }, function (response) {
+
+
+                    }, function (response) {
+
+                    }, function (dialog) {
+
+                    });
+                });
+            });
+    </script>
+    <script src="~/Content/assets/js/custom.js"></script>
+
+    <script src="~/Content/plugins/apex/apexcharts.min.js"></script>
+    <script src="~/Content/assets/js/dashboard/dash_2.js"></script>
+    <script src="~/Content/plugins/table/datatable/datatables.js"></script>
+    <!-- NOTE TO Use Copy CSV Excel PDF Print Options You Must Include These Files  -->
+
+    <script src="~/Content/selectize.js"></script>
+    <script src="~/Content/sweetalert2@10.js"></script>
+    <script src="~/Scripts/factory.js"></script>
+    <script src="~/Content/fontawesome/js/all.js"></script>
+    <script src="~/Content/plugins/font-icons/feather/feather.min.js"></script>
+
+    <!-- END GLOBAL MANDATORY SCRIPTS -->
+    <script src="~/Content/assets/js/ie11fix/fn.fix-padStart.js"></script>
+    <script src="~/Content/plugins/editors/quill/quill.js"></script>
+    <script src="~/Content/plugins/notification/snackbar/snackbar.min.js"></script>
+    <script src="~/Content/assets/js/apps/custom-mailbox.js"></script>
+
+    <script src="~/Content/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script src="~/Content/assets/js/apps/contact.js"></script>
+
+    <script src="~/Content/assets/js/ie11fix/fn.fix-padStart.js"></script>
+    <script src="~/Content/assets/js/apps/notes.js"></script>
+
+    <script src="~/Content/assets/js/ie11fix/fn.fix-padStart.js"></script>
+    <script src="~/Content/assets/js/apps/scrumboard.js"></script>
+    <script src="~/Content/assets/js/dashboard/dash_1.js"></script>
+    <script type="text/javascript">
+        feather.replace();
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,157 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <nav class="breadcrumb-one" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="javascript:void(0);">Log</a></li>
+        </ol>
+    </nav>
+    <div class="dropdown filter custom-dropdown-icon">
+        <a class="dropdown-toggle btn" href="#" role="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="text">More</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg></a>
+
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="filterDropdown">
+            <a class="dropdown-item" id="export_logs_report" href="javascript:void(0);" data-value="<span>Show</span> : Export Available Assets Report">Export Requests Report</a>
+        </div>
+    </div>
+</div>
+
+
+<form action="" id="filter_form" method="post">
+    <div class="row">
+        <div class="form-group col-3">
+            <input class="form-control" type="text" id="text_search" name="text_search" placeholder="Search">
+        </div>
+        <div class="form-group col-md-3">
+            @Html.DropDownList("user_id", new SelectList(ViewBag.users, "id", "full_name"), "Select User", new { @class = "form-control", @name = "user_id", @id = "user_id" })
+        </div>
+        <div class="form-group col-md-3">
+            @Html.DropDownList("location_id", new SelectList(ViewBag.locations, "id", "name"), "Select Location", new { @class = "form-control", @name = "location_id", @id = "location_id" })
+        </div>
+
+        <div class="form-group col-3">
+            <input class="form-control" type="date" id="from_date" name="from_date">
+        </div>
+        <div class="form-group col-3">
+            <input class="form-control" type="date" id="to_date" name="to_date">
+        </div>
+
+        <div class="form-group">
+            <button id="search" type="button" class="btn btn-primary px-3 radius-30">Search</button>
+        </div>
+        <div class="form-group col-3">
+            <button id="reset" type="reset" class="btn btn-danger px-3 radius-30">Reset</button>
+        </div>
+
+    </div>
+</form>
+
+
+<div class="card">
+    <div class="card-body">
+        <table id="logsTable" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Action</th>
+                    <th>Notes</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+</div>
+@section scripts
+{
+    <script>
+       $(document).ready(function () {
+
+           var datatable = $('#logsTable')
+                .DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "scrollX": true,
+                    "stateSave": false,
+                    "lengthChange": false,
+                    "dom": 'Bfrtip',
+
+                    "buttons": ['copy', 'excel', 'pdf', 'print'],
+                    "pageLength":10,
+                    "rowId": 'id',
+                    "ajax": {
+                        "url": "@Url.Action("Index", "Log")",
+                        "type": "POST",
+                        "datatype": "json",
+                        "dataSrc": "data"
+                    },
+                    "columns": [
+                        {
+                            "data": "id",
+                            "searchable": true
+                        },
+                        {
+                            "data": "full_name",
+                            "searchable": true
+                        },
+                        {
+                            "data": "string_location",
+                            "searchable": true
+                        },
+                        {
+                            "data": "action",
+                            "searchable": true
+                        },
+                        {
+                            "data": "notes",
+                            "searchable": true
+                        },
+                        {
+                            "data": "string_created_at",
+                            "searchable": true
+                        }
+
+                    ]
+                });
+
+            $('#search').on('click', function () {
+                datatable.search($("#text_search").val());
+                datatable.columns(0).search($("#location_id").val());
+                datatable.columns(1).search($("#from_date").val());
+                datatable.columns(2).search($("#to_date").val());
+                datatable.columns(3).search($("#user_id").val());
+                
+                datatable.draw();
+            });
+
+            $('#text_search').on('keyup', function (e) {
+                if (e.keyCode == 13)
+                    $('#search').trigger('click');
+            });
+
+            $('#reset').on('click', function () {
+                $("#text_search").val("");
+                $("#location_id").val("");
+                $("#from_date").val("");
+                $("#to_date").val("");
+                $("#user_id").val("");
+                
+                $('#search').trigger('click');
+
+            });
+           @*$(document).on("click", "#export_requests_report", function () {
+               var action = '@Url.Action("RequestsReport", "Report")';
+               $('#filter_form').attr('action', action);
+               $('#filter_form').submit();
+           });*@
+
+        });
+
+    </script>
+}
+

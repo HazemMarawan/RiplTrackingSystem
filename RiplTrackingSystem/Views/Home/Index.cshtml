@@ -1,0 +1,612 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+
+<div class="row layout-top-spacing">
+    @if (RiplTrackingSystem.Auth.can.hasPermission("access_dashboard"))
+    {
+        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+            <div class="widget widget-card-four">
+                <div class="widget-content">
+                    <div class="w-header">
+                        <div class="w-info">
+                            <h6 class="value">Total Assets In RIPL</h6>
+                        </div>
+
+                    </div>
+
+                    <div class="w-content">
+
+                        <div class="w-info">
+                            <p class="value">@ViewBag.allAssts</p>
+                        </div>
+
+                    </div>
+
+                    <div class="w-progress-stats">
+
+
+                        <div class="">
+                            <div class="w-icon">
+                                <p>RIPL Assets</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (RiplTrackingSystem.Auth.can.hasPermission("access_dashboard"))
+    {
+        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+            <div class="widget widget-card-four">
+                <div class="widget-content">
+                    <div class="w-header">
+                        <div class="w-info">
+                            <h6 class="value">Available Assets</h6>
+                        </div>
+
+                    </div>
+
+                    <div class="w-content">
+
+                        <div class="w-info">
+                            <p class="value">@ViewBag.availabeAssets</p>
+                        </div>
+
+                    </div>
+
+                    <div class="w-progress-stats">
+                        <div class="progress">
+                            <div class="progress-bar bg-gradient-secondary" role="progressbar" style="width:@ViewBag.availabeAssetsPercentage" aria-valuenow="@ViewBag.availabeAssetsPercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+
+                        <div class="">
+                            <div class="w-icon">
+                                <p>@ViewBag.availabeAssetsPercentage</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (RiplTrackingSystem.Auth.can.hasPermission("access_dashboard"))
+    {
+        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+            <div class="widget widget-card-four">
+                <div class="widget-content">
+                    <div class="w-header">
+                        <div class="w-info">
+                            <h6 class="value">Used Assets</h6>
+                        </div>
+
+                    </div>
+
+                    <div class="w-content">
+
+                        <div class="w-info">
+                            <p class="value">@(ViewBag.allAssts - ViewBag.availabeAssets)</p>
+                        </div>
+
+                    </div>
+
+                    <div class="w-progress-stats">
+                        <div class="progress">
+                            <div class="progress-bar bg-gradient-secondary" role="progressbar" style="width:@ViewBag.usedAssetsPercentage" aria-valuenow="@ViewBag.usedAssetsPercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+
+                        <div class="">
+                            <div class="w-icon">
+                                <p>@ViewBag.usedAssetsPercentage</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (RiplTrackingSystem.Auth.can.hasPermission("access_dashboard"))
+    {
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 layout-spacing">
+            <div class="widget widget-chart-three">
+                <div class="widget-heading">
+                    <div class="">
+                        <h5 class="">Used Assets By Locations</h5>
+                    </div>
+                </div>
+
+                <div class="widget-content">
+                    <div id="usedAssetsByLocations"></div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (RiplTrackingSystem.Auth.can.hasPermission("access_dashboard"))
+    {
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 layout-spacing">
+            <div class="widget widget-chart-three">
+                <div class="widget-heading">
+                    <div class="">
+                        <h5 class="">RIPL Orders</h5>
+                    </div>
+                </div>
+
+                <div class="widget-content">
+                    <div id="riplOrdersChart"></div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (RiplTrackingSystem.Auth.can.hasPermission("access_dashboard"))
+    {
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 layout-spacing">
+            <div class="widget widget-chart-three">
+                <div class="widget-heading">
+                    <div class="">
+                        <h5 class="">RIPL Orders By Assets</h5>
+                    </div>
+                </div>
+
+                <div class="widget-content">
+                    <div id="riplOrdersByAssetsChart"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 layout-spacing">
+            <div class="widget widget-chart-three">
+                <div class="widget-heading">
+                    <div class="">
+                        <h5 class="">RIPL Send, Recieve & Lost Assets</h5>
+                    </div>
+                </div>
+
+                <div class="widget-content">
+                    <div id="assetSendReciveChart"></div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (RiplTrackingSystem.Auth.can.hasPermission("access_company_dashboard") || RiplTrackingSystem.Auth.can.hasPermission("access_company_employee_dashboard"))
+    {
+        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+            <div class="widget widget-card-four">
+                <div class="widget-content">
+                    <div class="w-header">
+                        <div class="w-info">
+                            <h6 class="value">Assets Related To @ViewBag.LocationName</h6>
+                        </div>
+
+                    </div>
+
+                    <div class="w-content">
+
+                        <div class="w-info">
+                            <p class="value">@ViewBag.locationAssets</p>
+                        </div>
+
+                    </div>
+
+                    <div class="w-progress-stats">
+
+
+                        <div class="">
+                            <div class="w-icon">
+                                <p>Total Assets</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        if (RiplTrackingSystem.Auth.can.hasPermission("access_company_dashboard"))
+        {
+
+            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+                <div class="widget widget-card-four">
+                    <div class="widget-content">
+                        <div class="w-header">
+                            <div class="w-info">
+                                <h6 class="value">Total Assets in @ViewBag.LocationName</h6>
+                            </div>
+
+                        </div>
+
+                        <div class="w-content">
+
+                            <div class="w-info">
+                                <p class="value">@ViewBag.TotalAssets</p>
+                            </div>
+
+                        </div>
+
+                        <div class="w-progress-stats">
+
+
+                            <div class="">
+                                <div class="w-icon">
+                                    <p>@ViewBag.LocationName Assets</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+            <div class="widget widget-card-four">
+                <div class="widget-content">
+                    <div class="w-header">
+                        <div class="w-info">
+                            <h6 class="value">Waiting For Recieve Assets</h6>
+                        </div>
+
+                    </div>
+
+                    <div class="w-content">
+
+                        <div class="w-info">
+                            <p class="value">@ViewBag.WaitingForRecieve</p>
+                        </div>
+
+                    </div>
+
+                    <div class="w-progress-stats">
+                        <div class="progress">
+                            <div class="progress-bar bg-gradient-secondary" role="progressbar" style="width:@ViewBag.WaitingForRecievePercentage" aria-valuenow="@ViewBag.WaitingForRecievePercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+
+                        <div class="">
+                            <div class="w-icon">
+                                <p>@ViewBag.WaitingForRecievePercentage</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+            <div class="widget widget-card-four">
+                <div class="widget-content">
+                    <div class="w-header">
+                        <div class="w-info">
+                            <h6 class="value">Recieved Assets</h6>
+                        </div>
+
+                    </div>
+
+                    <div class="w-content">
+
+                        <div class="w-info">
+                            <p class="value">@ViewBag.RecievedAssets</p>
+                        </div>
+
+                    </div>
+
+                    <div class="w-progress-stats">
+                        <div class="progress">
+                            <div class="progress-bar bg-gradient-secondary" role="progressbar" style="width:@ViewBag.RecievedAssetsPercentage" aria-valuenow="@ViewBag.RecievedAssetsPercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+
+                        <div class="">
+                            <div class="w-icon">
+                                <p>@ViewBag.RecievedAssetsPercentage</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+            <div class="widget widget-card-four">
+                <div class="widget-content">
+                    <div class="w-header">
+                        <div class="w-info">
+                            <h6 class="value">Lost Assets</h6>
+                        </div>
+
+                    </div>
+
+                    <div class="w-content">
+
+                        <div class="w-info">
+                            <p class="value">@ViewBag.LostAssets</p>
+                        </div>
+
+                    </div>
+
+                    <div class="w-progress-stats">
+                        <div class="progress">
+                            <div class="progress-bar bg-gradient-secondary" role="progressbar" style="width:@ViewBag.LostAssetsPercentage" aria-valuenow="@ViewBag.LostAssetsPercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+
+                        <div class="">
+                            <div class="w-icon">
+                                <p>@ViewBag.LostAssetsPercentage</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    @if (RiplTrackingSystem.Auth.can.hasPermission("access_company_dashboard"))
+    {
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 layout-spacing">
+            <div class="widget widget-chart-three">
+                <div class="widget-heading">
+                    <div class="">
+                        <h5 class="">Assets Distribution</h5>
+                    </div>
+                </div>
+
+                <div class="widget-content">
+                    <div id="assetDistributionChart"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 layout-spacing">
+            <div class="widget widget-chart-three">
+                <div class="widget-heading">
+                    <div class="">
+                        <h5 class="">Assets Distribution By Status</h5>
+                    </div>
+                </div>
+
+                <div class="widget-content">
+                    <div id="assetDistributionByStatusChart"></div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $.ajax({
+            type: "GET",
+            url: '@Url.Action("usedAssetsByLocationsChart", "Home")',
+            contentType: "application/json; charset=utf-8",
+            datatype: "json",
+                success: function (data) {
+                    var options = {
+                        series: data.locationsAssets,
+                        chart: {
+                            height: 360,
+                            type: 'pie',
+                            toolbar: {
+                                show: false,
+                            }
+                        },
+                        labels: data.xAxis,
+                        responsive: [{
+                            breakpoint: 480,
+                            options: {
+                                chart: {
+                                    width: 200
+                                },
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            }
+                        }]
+                    };
+
+                    var usedAssetsByLocationsChart = new ApexCharts(
+                    document.querySelector("#usedAssetsByLocations"),
+                    options
+                );
+                    usedAssetsByLocationsChart.render();
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+            }
+        });
+
+            $.ajax({
+            type: "GET",
+            url: '@Url.Action("riplAssetsChart", "Home")',
+            contentType: "application/json; charset=utf-8",
+            datatype: "json",
+                success: function (data) {
+                    var options = {
+                        chart: {
+                            type: 'bar',
+
+                        },
+                        theme: {
+                            monochrome: {
+                                enabled: true,
+                                color: '#255aee',
+                                shadeTo: 'light',
+                                shadeIntensity: 0.65
+                            }
+                        },
+                        fill: {
+                            colors: ['#F44336', '#E91E63', '#9C27B0']
+                        },
+                        series: [{
+                            name: 'Used Assets By Locations',
+                            data: data.orders_count
+                        }],
+                        xaxis: {
+                            categories: data.xAxis,
+                        }
+                    }
+
+
+                    var riplOrdersChart = new ApexCharts(
+                    document.querySelector("#riplOrdersChart"),
+                    options
+                );
+                    riplOrdersChart.render();
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+            }
+            });
+
+            $.ajax({
+            type: "GET",
+            url: '@Url.Action("riplAssetsChart", "Home")',
+            contentType: "application/json; charset=utf-8",
+            datatype: "json",
+                success: function (data) {
+                    var options = {
+                        chart: {
+                            type: 'bar',
+
+                        },
+                        series: [{
+                            name: 'Used Assets By Locations',
+                            data: data.assets_count
+                        }],
+                        xaxis: {
+                            categories: data.xAxis,
+                        }
+                    }
+
+                    var riplOrdersByAssetsChart = new ApexCharts(
+                    document.querySelector("#riplOrdersByAssetsChart"),
+                        options
+                );
+                    riplOrdersByAssetsChart.render();
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+            }
+            });
+
+            $.ajax({
+            type: "GET",
+            url: '@Url.Action("assetDistributionChart", "Home")',
+            contentType: "application/json; charset=utf-8",
+            datatype: "json",
+                success: function (data) {
+                    var options = {
+                        chart: {
+                            type: 'area',
+
+                        },
+                        series: [{
+                            name: 'Used Assets By Locations',
+                            data: data.locationsAssets
+                        }],
+                        xaxis: {
+                            categories: data.xAxis,
+                        }
+                    }
+
+                    var assetDistributionChart = new ApexCharts(
+                    document.querySelector("#assetDistributionChart"),
+                        options
+                );
+                    assetDistributionChart.render();
+            },
+            error: function () {
+                //alert("Dynamic content load failed.");
+            }
+            });
+
+            $.ajax({
+            type: "GET",
+            url: '@Url.Action("assetDistributionChartByStatus", "Home")',
+            contentType: "application/json; charset=utf-8",
+            datatype: "json",
+                success: function (data) {
+                    var options = {
+                        chart: {
+                            type: 'bar',
+
+                        },
+                        series: [
+                            {
+                            name: 'Waiting',
+                                data: data.waitingAssets
+                        }, {
+                                name: 'Recieved',
+                                data: data.recievedAssets
+                            },
+                            {
+                                name: 'Lost',
+                                data: data.lostAssets
+                            }],
+                        xaxis: {
+                            categories: data.xAxis,
+                        }
+                    }
+
+                    var assetDistributionChart = new ApexCharts(
+                        document.querySelector("#assetDistributionByStatusChart"),
+                        options
+                );
+                    assetDistributionChart.render();
+            },
+            error: function () {
+                //alert("Dynamic content load failed.");
+            }
+            });
+
+            $.ajax({
+            type: "GET",
+            url: '@Url.Action("assetSendReciveChart", "Home")',
+            contentType: "application/json; charset=utf-8",
+            datatype: "json",
+                success: function (data) {
+                    var options = {
+                        chart: {
+                            type: 'bar',
+
+                        },
+
+                        series: [
+                            {
+                            name: 'Send',
+                                data: data.sendAssets
+                        }, {
+                                name: 'Recieved',
+                                data: data.recivedAssets
+                            },
+                            {
+                                name: 'Lost',
+                                data: data.lostAssets
+                            }],
+                        xaxis: {
+                            categories: data.xAxis,
+                        }
+
+                    }
+
+                    var assetSendReciveChart = new ApexCharts(
+                        document.querySelector("#assetSendReciveChart"),
+                        options
+                );
+                    assetSendReciveChart.render();
+            },
+            error: function () {
+                //alert("Dynamic content load failed.");
+            }
+            });
+
+
+
+        });
+    </script>
+}

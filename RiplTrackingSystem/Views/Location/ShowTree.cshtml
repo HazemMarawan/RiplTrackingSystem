@@ -1,0 +1,182 @@
+﻿@model IEnumerable<RiplTrackingSystem.ViewModel.locationViewModel>
+@{
+    ViewBag.Title = "ShowTree";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int counter = 0;
+}
+
+
+<style>
+    .zc-html,
+    .zc-body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .chart--container {
+        height: 100%;
+        width: 100%;
+        min-height: 530px;
+    }
+
+    .zc-ref {
+        display: none;
+    }
+
+    select {
+        margin: 10px;
+    }
+</style>
+
+<!-- CHART CONTAINER -->
+<div id="myChart" class="chart--container">
+    <a href="https://www.zingchart.com/" rel="noopener" class="zc-ref">Powered by ZingChart</a>
+    <label for="tree-aspect">Layout</label>
+    <select id="tree-aspect">
+        <option value="tree-right" selected>Right to left</option>
+        <option value="tree-left">Left to right</option>
+        <option value="tree-up">Bottom up</option>
+        <option value="tree-down">Top Down</option>
+        <option value="tree-radial">Circle</option>
+    </select>
+    <label for="tree-node">Node Connector Type</label>
+    <select id="tree-node">
+        <option value="arc" selected>Arc</option>
+        <option value="line">Line</option>
+        <option value="side-before">Side Before</option>
+        <option value="side-after">Side After</option>
+        <option value="side-between">Side Between</option>
+        <option value="split">Split</option>
+        <option value="sibling">Sibling</option>
+    </select>
+    <label for="tree-node">Node Shape</label>
+    <select id="tree-node-shape">
+        <option value="circle" selected>Circle</option>
+        <option value="square">Square</option>
+        <option value="diamond">Diamond</option>
+        <option value="triangle">Triangle</option>
+        <option value="star5">Star</option>
+        <option value="star6">Star Type 2</option>
+        <option value="star7">Star Type 3</option>
+        <option value="star8">Star Type 4</option>
+        <option value="rpoly5">Polygon</option>
+        <option value="gear5">Gear</option>
+        <option value="gear6">Gear 2</option>
+        <option value="gear7">Gear 3</option>
+        <option value="gear8">Gear 4</option>
+    </select>
+</div>
+@section scripts
+{
+    <script src="~/Scripts/zingchart.min.js"></script>
+    <script>
+        ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"]; // window:load event for Javascript to run after HTML
+        // because this Javascript is injected into the document head
+        window.addEventListener('load', () => {
+            let chartData = [{
+                id: 'theworld',
+                parent: '',
+                name: 'The World',
+            },
+            {
+                id: 'asia',
+                parent: 'theworld',
+                name: 'Asia',
+                value: 4100000000
+            },
+            {
+                id: 'africa',
+                parent: 'theworld',
+                name: 'Africa',
+                value: 1260000000
+            },
+            {
+                id: 'america',
+                parent: 'theworld',
+                name: 'America',
+                value: 328000000
+            },
+            {
+                id: 'europe',
+                parent: 'theworld',
+                name: 'Europe',
+                value: 741000000
+            },
+            {
+                id: 'ca',
+                parent: 'america',
+                name: 'California',
+                value: 32000000
+            },
+            {
+                id: 'ny',
+                parent: 'america',
+                name: 'New York',
+                value: 19000000
+            },
+            {
+                id: 'txt',
+                parent: 'america',
+                name: 'Texas',
+                value: 29000000
+            },
+            ];
+
+            let chartConfig = {
+                type: 'tree',
+                options: {
+                    link: {
+                        aspect: 'arc'
+                    },
+                    maxSize: 15,
+                    minSize: 5,
+                    node: {
+                        type: 'circle',
+                        tooltip: {
+                            padding: '8px 10px',
+                            borderRadius: '3px',
+                        }
+                    }
+                },
+                series: chartData
+            };
+
+            zingchart.render({
+                id: 'myChart',
+                data: chartConfig,
+                height: '95%',
+                width: '100%',
+                output: 'canvas'
+            });
+
+            // change tree layout
+            document.getElementById('tree-aspect').addEventListener('change', function (e) {
+                chartConfig.options.aspect = e.srcElement.value;
+                zingchart.exec('myChart', 'setdata', {
+                    data: chartConfig
+                });
+            });
+
+            // change tree connector
+            document.getElementById('tree-node').addEventListener('change', function (e) {
+                chartConfig.options.link.aspect = e.srcElement.value;
+                zingchart.exec('myChart', 'setdata', {
+                    data: chartConfig
+                });
+            });
+
+            // change node type
+            document.getElementById('tree-node-shape').addEventListener('change', function (e) {
+                chartConfig.options.node.type = e.srcElement.value;
+                zingchart.exec('myChart', 'setdata', {
+                    data: chartConfig
+                });
+            })
+        });
+    </script>
+}
+
+
+

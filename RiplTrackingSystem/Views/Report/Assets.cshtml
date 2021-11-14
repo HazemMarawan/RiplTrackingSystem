@@ -1,0 +1,67 @@
+﻿
+@{
+    ViewBag.Title = "Assets";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <nav class="breadcrumb-one" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="javascript:void(0);">Reports</a></li>
+            <li class="breadcrumb-item"><a href="javascript:void(0);">Assets</a></li>
+        </ol>
+    </nav>
+</div>
+<form action="@Url.Action("AssetsReport","Report")" method="post">
+    <div class="row">
+        <div class="form-group col-3">
+            <input class="form-control" type="text" id="text_search" name="text_search" placeholder="Search">
+        </div>
+        <div class="form-group col-3">
+            <input class="form-control" type="text" id="asset_type" name="asset_type" placeholder="Type">
+        </div>
+        <div class="form-group col-3">
+            <input class="form-control" type="text" id="asset_color" name="asset_color" placeholder="Color">
+        </div>
+        <div class="form-group col-md-3">
+            @Html.DropDownList("user_id", new SelectList(ViewBag.users, "id", "full_name"), "Select User", new { @class = "form-control", @name = "user_id", @id = "user_id" })
+        </div>
+        <div class="form-group col-3">
+            <input class="form-control" type="date" id="from_date" name="from_date">
+        </div>
+        <div class="form-group col-3">
+            <input class="form-control" type="date" id="to_date" name="to_date">
+        </div>
+        <div class="form-group col-3">
+            <select name="asset_status" class="form-control">
+                <option value="1">All</option>
+                <option value="2">Available</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button id="export" type="submit" class="btn btn-primary px-3 radius-30">Export</button>
+        </div>
+        <div class="form-group col-3">
+            <button id="reset" class="btn btn-danger px-3 radius-30">Reset</button>
+        </div>
+
+    </div>
+</form>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $('#reset').on('click', function () {
+                $("#text_search").val("");
+                $("#from_date").val("");
+                $("#to_date").val("");
+
+                $('#search').trigger('click');
+
+            });
+        });
+    </script>
+}
+
+

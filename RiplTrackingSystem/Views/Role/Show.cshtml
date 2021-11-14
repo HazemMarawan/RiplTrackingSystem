@@ -1,0 +1,209 @@
+﻿@model IEnumerable<RiplTrackingSystem.ViewModel.PermissionGroupViewModel>
+@{
+    ViewBag.Title = "Show";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="modal fade" id="manage_role_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <form action="" method="post" enctype='multipart/form-data'>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal_title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-body">
+                        <div class="form-row">
+                            <input type="hidden" name="id" id="id" value="0" />
+                            <div class="form-group col-md-12">
+                                <label>Name</label>
+                                <input required name="name" id="name" type="text" class="form-control radius-30" />
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label>Description</label>
+                                <input type="text" name="description" id="description" class="form-control radius-30" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="page-header">
+    <nav class="breadcrumb-one" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="javascript:void(0);">Roles</a></li>
+        </ol>
+    </nav>
+
+</div>
+
+
+<div class="row">
+    <div class="form-group col-md-6">
+        @Html.DropDownList("role_id", new SelectList(ViewBag.Roles, "id", "name"), "Select Role", new { @class = "form-control", @name = "role_id", @id = "role_id", @required = "required" })
+    </div>
+    <div class="form-group col-md-2">
+        <a class="btn btn-primary" href="javascript:;" id="add_role"><i class="fadeIn animated bx bx-plus"></i> Add Role</a>
+    </div>
+    <div class="form-group col-md-2">
+        <button type="button" class="btn btn-success" id="update_role"><i class="fadeIn animated bx bx-save"></i> Update Role</button>
+    </div>
+    <div class="form-group col-md-2">
+        <button type="button" class="btn btn-danger" id="delete_role"><i class="fadeIn animated bx bx-trash-alt"></i> Delete Role</button>
+    </div>
+    
+</div>
+<div class="row">
+    @foreach (var row in Model)
+    {
+        <div class="col-12 col-lg-4 col-xl-4">
+            <div class="card">
+                <div class="card-header">
+                    @row.name
+                </div>
+                <div class="card-body">
+                    @foreach (var permission in row.permissions)
+                    {
+                        <input type="checkbox" class="permission" id="@permission.id" value="@permission.id" /> <label for="@permission.id">@permission.nice_name</label><br />
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section scripts
+{
+    <script>
+        var permissionIDs = [];
+        $('#update_role,#delete_role').prop('disabled', true);
+
+        $("#add_role").click(function () {
+            var modal = $('#manage_role_modal').clone();
+            var action = '@Url.Action("saveRole", "Role")';
+            modal.find('form').attr('action', action);
+            modal.find('#modal_title').text('Add Role');
+            modal.execModal({
+                progressBar: 'progress_bar',
+                progressText: 'progress_text',
+            }, function (data) {
+                    var roleHtml = "<option selected value='" + data.role.id + "'>" + data.role.name + "</option>";
+                    $("#role_id").append(roleHtml);
+                    $('.permission').prop('checked', false);
+
+                    Swal.fire({
+                        icon: data.icon,
+                        title: data.title,
+                        text: data.text
+                    });
+            }, function (response) {
+
+            }, function (dialog) {
+
+            });
+        });
+
+        function remove_array_element(array, n) {
+            var index = array.indexOf(n);
+            if (index > -1) {
+                array.splice(index, 1);
+            }
+            return array;
+        }
+
+        //$(".permission").click(function () {
+        //    if ($(this).is(':checked'))
+        //        permissionIDs.push($(this).val());
+        //    else
+        //        permissionIDs = remove_array_element(permissionIDs, $(this).val())
+
+        //    console.log(permissionIDs.join());
+        //});
+
+        $("#update_role").click(function () {
+            //console.log($('.permission').val());
+            //permissionIDs = $('.permission:checkbox:checked').val();
+            var checkedVals = $('.permission:checkbox:checked').map(function () {
+                return this.value;
+            }).get();
+            //if (checkedVals.length > 0) {
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("saveRole", "Role")',
+                    contentType: "application/json; charset=utf-8",
+                    data: { "id": $("#role_id").val(), "permissionIDs": checkedVals.join(",") },
+                    datatype: "json",
+                    success: function (data) {
+                        Swal.fire({
+                            icon: data.icon,
+                            title: data.title,
+                            text: data.text
+                        });
+               
+                        //datatable.draw();
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            //}
+        });
+        $("#role_id").change(function () {
+            if ($(this).val().length == 0) {
+                $('.permission').prop('checked', false);
+                $('#update_role,#delete_role').prop('disabled', true);
+            }
+            else {
+                $('#update_role,#delete_role').prop('disabled', false);
+                
+                 $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("permissionList", "Role")',
+                    contentType: "application/json; charset=utf-8",
+                    data: { "id": $(this).val()},
+                    datatype: "json",
+                     success: function (data) {
+                         $('.permission').prop('checked', false);
+                         //console.log(data.permissionIDs)
+                         data.permissionIDs.forEach(function (value) {
+                             $('#' + value).prop('checked', true);
+                         });
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                 });
+            }
+        });
+        $("#delete_role").click(function () {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("deleteRole", "Role")',
+                contentType: "application/json; charset=utf-8",
+                data: { "id": $("#role_id").val()},
+                datatype: "json",
+                success: function (data) {
+                    $("#role_id option[value='" + data.role + "']").remove();
+                    $('.permission').prop('checked', false);
+                    Swal.fire({
+                        icon: data.icon,
+                        title: data.title,
+                        text: data.text
+                    });
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+    </script>
+}

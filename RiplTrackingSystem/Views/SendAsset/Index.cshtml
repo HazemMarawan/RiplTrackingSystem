@@ -1,0 +1,439 @@
+﻿@using RiplTrackingSystem.Helpers
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="modal fade" id="manage_sendAsset_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <form action="" method="post" enctype='multipart/form-data'>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal_title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-body">
+                        <div class="form-row">
+                            <input type="hidden" name="id" id="id" value="0" />
+                            <div class="form-group col-md-12">
+                                <label>Location</label>
+                                @Html.DropDownList("location_id", new SelectList(ViewBag.locations, "id", "name"), "Select Location", new { @class = "selectize", @name = "location_id", @id = "location_id", @required = "required" })
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label>Asset</label>
+                                @Html.DropDownList("assets_ids", new SelectList(ViewBag.assets, "id", "tag_id"), "Select Asset", new { @class = "selectize", @name = "assets_ids", @id = "asset_id", @required = "required", @multiple = "multiple" })
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Start Date</label>
+                                <input type="date" name="start_date" id="start_date" class="form-control radius-30" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Due Date</label>
+                                <input type="date" name="due_date" id="due_date" class="form-control radius-30" />
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="order_assets_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <form action="" method="post" enctype='multipart/form-data'>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal_title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-body">
+                        <div class="form-row">
+
+                            <div class="form-group col-md-12" id="asset_details_id">
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="page-header">
+    <nav class="breadcrumb-one" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="javascript:void(0);">Manage Assets</a></li>
+        </ol>
+    </nav>
+    @if (ViewBag.isRipl)
+    {
+        <div class="dropdown filter custom-dropdown-icon">
+            <a class="dropdown-toggle btn" href="#" role="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="text">More</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg></a>
+
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="filterDropdown">
+                <a class="dropdown-item" id="add_sendasset" data-value="<span>Show</span> : Send Send" href="javascript:void(0);">Send Asset</a>
+                <a class="dropdown-item" href="javascript:void(0);" id="export_orders_with_assets" data-value="<span>Show</span> : Export Orders with Assets">Export Orders with Assets Report</a>
+
+            </div>
+        </div>
+    }
+</div>
+
+<form action="" id="filter_form" onkeydown="return event.key != 'Enter';" method="post">
+    <div class="row">
+        <div class="form-group col-3">
+            <input class="form-control" type="text" id="text_search" name="text_search" placeholder="Search">
+        </div>
+        <div class="form-group col-md-3">
+            @Html.DropDownList("location_id", new SelectList(ViewBag.locations, "id", "name"), "Select Location", new { @class = "form-control", @name = "location_id", @id = "location_id_search" })
+        </div>
+        <div class="form-group col-md-3">
+            @Html.DropDownList("user_id", new SelectList(ViewBag.users, "id", "full_name"), "Select User", new { @class = "form-control", @name = "user_id", @id = "user_id" })
+        </div>
+        <div class="form-group col-3">
+            <input class="form-control" type="date" id="from_date" name="from_date">
+        </div>
+        <div class="form-group col-3">
+            <input class="form-control" type="date" id="to_date" name="to_date">
+        </div>
+        <div class="form-group">
+            <button id="search" type="button" class="btn btn-primary px-3 radius-30">Search</button>
+        </div>
+        <div class="form-group col-3">
+            <button id="reset" type="reset" class="btn btn-danger px-3 radius-30">Reset</button>
+        </div>
+
+    </div>
+</form>
+
+
+<div class="card">
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+
+            <table id="sendAssetTable" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Location</th>
+                        @*<th>Type</th>*@
+                        <th># of Assets</th>
+                        <th>Notes</th>
+                        <th>Start Date</th>
+                        <th>Due Date</th>
+                        @*<th></th>*@
+                    </tr>
+                </thead>
+
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script>
+       $(document).ready(function () {
+
+           var datatable = $('#sendAssetTable')
+                .DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "scrollX": true,
+                    "stateSave": false,
+                    "lengthChange": false,
+                    "dom": 'Bfrtip',
+
+                    "buttons": ['copy', 'excel', 'pdf', 'print'],
+                    "pageLength":10,
+                    "rowId": 'id',
+                    "ajax": {
+                        "url": "@Url.Action("Index", "SendAsset")",
+                        "type": "POST",
+                        "datatype": "json",
+                        "dataSrc": "data"
+                    },
+                    "columns": [
+                        {
+                            "data": "id",
+                            "searchable": true
+                        },
+                        {
+                            "data": "location_name",
+                            "searchable": true
+                        },
+                        {
+                            "data": "assets_count", "searchable": true,
+                            fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                                var html = '';
+                                html += "<a class='assetDetails' href='javascript:void(0)' title='Show Assets'>" + oData.assets_count + "</a>&nbsp;";
+
+                                $(nTd).html("<span class='action-column'>" + html + "</span>");
+                            }
+                        },
+                        {
+                            "data": "notes",
+                            "searchable": true
+                        },
+                        {
+                            "data": "start_date", "searchable": true,
+                            fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                                var html = '';
+                                if (oData.start_date) {
+                                var num = parseInt(oData.start_date.replace(/[^0-9]/g, ""));
+                                var date = new Date(num);
+
+                                html = date.toDateString();
+                                }
+                                $(nTd).html("<span class='action-column'>" + html + "</span>");
+                            }
+                        },
+                        {
+                            "data": "due_date", "searchable": true,
+                            fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                                var html = '';
+                                if (oData.due_date) {
+                                    var num = parseInt(oData.due_date.replace(/[^0-9]/g, ""));
+                                    var date = new Date(num);
+
+                                    html = date.toDateString();
+                                }
+                                $(nTd).html("<span class='action-column'>" + html + "</span>");
+                            }
+                        }
+                        //},
+                        //{
+                        //    "data": "id", "searchable": true,
+                        //    fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                        //        var html = "";
+
+                        //        //html += "<a class='edit' id='" + oData.id + "' href='javascript:void(0)' title='Edit'><i class='lni lni-pencil'></i></a>&nbsp;";
+                        //        html += "<a class='delete' id='" + oData.id + "' href='javascript:void(0)' title='Delete'><i class='fas fa-trash'></i></a>";
+
+                        //        //if (oData.status == 1 && $('#can_receive').val() == 1) {
+                        //        //    html += "<a class='receive' id='" + oData.id + "' href='javascript:void(0)' title='Receive'><i class='lni lni-checkmark'></i></a>&nbsp;";
+                        //        //    html += "<a class='reject' id='" + oData.id + "' href='javascript:void(0)' title='Reject'><i class='lni lni-close'></i></a>&nbsp;";
+                        //        //}
+                        //        //if (oData.status == 2 && $('#can_send').val() == 1)
+                        //        //    html += "<a class='send' id='" + oData.id + "' href='javascript:void(0)' title='Send'><i class='lni lni-fireworks'></i></a>";
+
+                        //        $(nTd).html("<span class='action-column'>" + html + "</span>");
+                        //    }
+                        //},
+                    ]
+                });
+
+            $('#search').on('click', function () {
+                datatable.search($("#text_search").val());
+                datatable.columns(0).search($("#location_id_search").val());
+                datatable.columns(1).search($("#user_id").val());
+                datatable.columns(2).search($("#from_date").val());
+                datatable.columns(3).search($("#to_date").val());
+                datatable.draw();
+            });
+
+            $('#text_search').on('keyup', function (e) {
+                if (e.keyCode == 13)
+                    $('#search_button').trigger('click');
+            });
+
+            $('#reset').on('click', function () {
+                $("#text_search").val("");
+
+                $('#search').trigger('click');
+
+            });
+
+           $(document).on("click", "#export_orders_with_assets", function () {
+                var action = '@Url.Action("OrdersReport", "Report")';
+               $('#filter_form').attr('action', action);
+               $('#filter_form').submit();
+           });
+
+            //$('#date-form').bootstrapMaterialDatePicker({
+            //    time: false
+            //});
+
+            //$('#date-to').bootstrapMaterialDatePicker({
+            //    time: false
+            //});
+
+           $("#add_sendasset").click(function () {
+               var modal = $('#manage_sendAsset_modal').clone();
+                var action = '@Url.Action("saveSendAsset", "SendAsset")';
+                modal.find('form').attr('action', action);
+                modal.find('#modal_title').text('Send Asset');
+                modal.execModal({
+                    progressBar: 'progress_bar',
+                    progressText: 'progress_text',
+                }, function (response) {
+
+                        location.reload();
+
+                }, function (response) {
+
+                }, function (dialog) {
+                        dialog.find('#location_id').selectize({
+                            plugins: ['remove_button'],
+                        });
+                        dialog.find('#asset_id').selectize({
+                            plugins: ['remove_button'],
+                        });
+                        var dtToday = new Date();
+
+                        var month = dtToday.getMonth() + 1;
+                        var day = dtToday.getDate();
+                        var year = dtToday.getFullYear();
+                        if (month < 10)
+                            month = '0' + month.toString();
+                        if (day < 10)
+                            day = '0' + day.toString();
+
+                        var maxDate = day + '/' + month + '/' + year;
+                        dialog.find("#start_date").attr('min', maxDate);
+                });
+            });
+
+            $(document).on("click", ".edit", function () {
+                var data = datatable.row($(this).closest('tr')).data();
+                console.log(data);
+                var modal = $('#manage_sendAsset_modal').clone();
+                var action = '@Url.Action("saveSendAsset", "SendAsset")';
+                modal.find('form').attr('action', action);
+                modal.find('#modal_title').text('Edit Rented Asset');
+                modal.execModal({
+                    progressBar: 'progress_bar',
+                    progressText: 'progress_text',
+                }, function (response) {
+                        datatable.draw();
+
+                }, function (response) {
+
+                }, function (dialog) {
+                        dialog.find('#id').val(data.id);
+                        if (data.date_start) {
+                        var value = new Date
+                            (
+                                parseInt(data.start_date.replace(/(^.*\()|([+-].*$)/g, ''))
+                            );
+                        var date_start = value.getFullYear() +
+                            "-" +
+                            ("0" + (value.getMonth() + 1)).slice(-2) +
+                            "-" +
+                            ("0" + value.getDate()).slice(-2)
+                            ;
+                        dialog.find('#start_date').val(date_start);
+                        }
+
+                        if (data.date_due) {
+                            var value = new Date
+                                (
+                                    parseInt(data.due_date.replace(/(^.*\()|([+-].*$)/g, ''))
+                                );
+                            var date_due = value.getFullYear() +
+                                "-" +
+                                ("0" + (value.getMonth() + 1)).slice(-2) +
+                                "-" +
+                                ("0" + value.getDate()).slice(-2)
+                                ;
+                            dialog.find('#due_date').val(date_due);
+                        }
+                        dialog.find('#location_id option[value=' + data.location_id + ']').attr('selected', 'selected');
+                        var ids = [];
+                        var $select = dialog.find('#asset_id').selectize({
+                            plugins: ['remove_button'],
+                        });
+                        $select[0].selectize.clear();
+                        var selectize = $select[0].selectize;
+                        console.log(data.assets_ids);
+                        data.assets_ids.forEach(function (value) {
+                            ids.push(value);
+
+                        });
+                        selectize.setValue(ids);
+                        dialog.find('#location_id').selectize({
+                            plugins: ['remove_button'],
+                        });
+
+                });
+
+            });
+
+            $(document).on("click", ".delete", function () {
+                var data = datatable.row($(this).closest('tr')).data();
+                warningBox("Are you sure you want to delete this Sent Assetes ?", function () {
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Action("deleteSendAsset", "SendAsset")',
+                        contentType: "application/json; charset=utf-8",
+                        data: { "id": data.id },
+                        datatype: "json",
+                        success: function (data) {
+                            datatable.draw();
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+                });
+            });
+
+           $(document).on("click", ".assetDetails", function () {
+                var data = datatable.row($(this).closest('tr')).data();
+                console.log(data);
+               var modal = $('#order_assets_modal').clone();
+                modal.find('#modal_title').text('Asset Details');
+                modal.execModal({
+                    progressBar: 'progress_bar',
+                    progressText: 'progress_text',
+                }, function (response) {
+                        datatable.draw();
+
+                }, function (response) {
+
+                }, function (dialog) {
+
+                        data.assetsStatusAndLocation.forEach(function (value) {
+                            var html = "";
+                            if (value.status == 1)
+                                html += "<span class='badge badge-info'>" + value.tag_id + " => Wating For Receive (" + value.finalDestination + ")</span>&nbsp;";
+                            else if (value.status == 2)
+                                html += "<span class='badge badge-info'>" + value.tag_id + " => Received (" + value.finalDestination + ")</span>&nbsp;";
+                            else if (value.status == 3)
+                                html += "<span class='badge badge-info'>" + value.tag_id + " => Lost (" + value.finalDestination + ")</span>&nbsp;";
+
+                            dialog.find("#asset_details_id").append(html);
+                        });
+
+
+                });
+
+            });
+
+        });
+
+    </script>
+}
+

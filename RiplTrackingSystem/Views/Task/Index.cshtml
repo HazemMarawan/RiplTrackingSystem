@@ -1,0 +1,336 @@
+﻿@model RiplTrackingSystem.ViewModel.UserTaskViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <nav class="breadcrumb-one" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="javascript:void(0);">Apps</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a href="@Url.Action("Index","Task")">Tasks</a></li>
+        </ol>
+    </nav>
+</div>
+
+<div class="modal fade" id="add_task_modal" tabindex="-1" role="dialog" aria-labelledby="addTaskModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form action="" method="post">
+                    <div class="compose-box">
+                        <div class="compose-content" id="addTaskModalTitle">
+                            <h5 class="add-task-title">Add Task</h5>
+
+                            <div class="addTaskAccordion" id="add_task_accordion">
+                                <div class="card task-text-progress">
+                                    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#add_task_accordion">
+                                        <div class="card-body">
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="task-title mb-4">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                                        <input id="title" type="text" placeholder="Task" class="form-control" name="title">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12 mb-4">
+                                                    <div class="task-badge">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                                                        <textarea id="description" placeholder="Task Text" class="form-control" name="description"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="task-badge">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fa fa-user"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                                                        @Html.DropDownList("user_ids", new SelectList(ViewBag.users, "id", "full_name"), "Select User", new { @class = "selectize", @multiple = "multiple", @name = "user_ids", @id = "user_ids" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Discard</button>
+                        <button data-btnfn="editTask" class="btn edit-tsk btn-primary" type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+
+
+<div class="row app-notes layout-top-spacing" id="cancel-row">
+    <div class="col-lg-12">
+        <div class="app-hamburger-container">
+            <div class="hamburger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu chat-menu d-xl-none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></div>
+        </div>
+
+        <div class="app-container">
+
+            <div class="app-note-container">
+
+                <div class="app-note-overlay"></div>
+
+                <div class="tab-title">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-12 text-center">
+                            <a id="add_task" class="btn btn-primary" href="javascript:void(0);">Add</a>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-12 mt-5">
+                            
+
+                            <p class="group-section"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg> Groups </p>
+
+                            <ul class="nav nav-pills d-block group-list" id="pills-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link list-actions active g-dot-primary" id="all-tasks">All Tasks</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link list-actions g-dot-warning" id="task-new">New</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link list-actions g-dot-success" id="task-follow">Follow</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link list-actions g-dot-danger" id="task-completed">Completed</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="ct" class="note-container note-grid">
+                    @foreach (var task in Model.allTasks)
+                    {
+                        string taskTitle = String.Empty;
+                        string taskClass = String.Empty;
+                        if (task.status == 1)
+                        {
+                            taskTitle = "New";
+                            taskClass = "warning";
+                        }
+                        else if (task.status == 2)
+                        {
+                            taskTitle = "Follow";
+                            taskClass = "primary";
+                        }
+                        else if (task.status == 3)
+                        {
+                            taskTitle = "Done";
+                            taskClass = "success";
+                        }
+                        <div class="note-item all-tasks">
+                            <div class="note-inner-content">
+                                <div class="note-content">
+                                    <p class="note-title" data-noteTitle="@task.title">@task.title<span class="badge badge-@taskClass" style="float:right;"> @taskTitle</span></p>
+                                    <p class="meta-time">@task.stringCreatedAt</p>
+                                    <div class="note-description-content">
+                                        <p class="note-description" data-noteDescription="@task.description">@task.description</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p><b>To: </b>@task.stringCreatedToBy</p>
+                                </div>
+                                <div class="note-action">
+                                    <a href="javascript:void(0);" class="delete" data-id="@task.id"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fa fa-trash"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></a> | 
+                                    <a href="javascript:void(0);" class="follow" data-id="@task.user_task_id"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="far fa-thumbs-up"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></a>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    @foreach (var task in Model.myTasks)
+                    {
+                        string taskClass = String.Empty;
+                        if(task.status == 1)
+                        {
+                            taskClass = "task-new";
+                        }
+                        else if (task.status == 2)
+                        {
+                            taskClass = "task-follow";
+                        }
+                        else if (task.status == 3)
+                        {
+                            taskClass = "task-completed";
+                        }
+                        <div class="note-item @taskClass">
+                            <div class="note-inner-content">
+                                <div class="note-content">
+                                    <p class="note-title" data-noteTitle="@task.title">@task.title</p>
+                                    <p class="meta-time">@task.stringCreatedAt</p>
+                                    <div class="note-description-content">
+                                        <p class="note-description" data-noteDescription="@task.description">@task.description</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p><b>From: </b>@task.stringCreatedToBy</p>
+                                </div>
+                                <div class="note-action">
+                                    @if (task.status == 1)
+                                    {
+                                        <a href="javascript:void(0);" class="follow" data-id="@task.user_task_id"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="far fa-thumbs-up"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></a>
+                                    }
+                                    @if (task.status == 2)
+                                    {
+                                        <a href="javascript:void(0);" class="done" data-id="@task.user_task_id"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fa fa-check"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="notesMailModal" tabindex="-1" role="dialog" aria-labelledby="notesMailModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x close" data-dismiss="modal"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        <div class="notes-box">
+                            <div class="notes-content">
+                                <form action="javascript:void(0);" id="notesMailModalTitle">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="d-flex note-title">
+                                                <input type="text" id="n-title" class="form-control" maxlength="25" placeholder="Title">
+                                            </div>
+                                            <span class="validation-text"></span>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="d-flex note-description">
+                                                <textarea id="n-description" class="form-control" maxlength="60" placeholder="Description" rows="3"></textarea>
+                                            </div>
+                                            <span class="validation-text"></span>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btn-n-save" class="float-left btn">Save</button>
+                        <button class="btn" data-dismiss="modal"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Discard</button>
+                        <button id="btn-n-add" class="btn">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+@section scripts
+{
+    <script>
+       $(document).ready(function () {
+
+           $("#add_task").click(function () {
+               var modal = $('#add_task_modal').clone();
+                var action = '@Url.Action("saveTask", "Task")';
+                modal.find('form').attr('action', action);
+                modal.execModal({
+                    progressBar: 'progress_bar',
+                    progressText: 'progress_text',
+                }, function (response) {
+
+                        location.reload();
+                }, function (response) {
+
+                }, function (dialog) {
+                        dialog.find('#user_ids').selectize({
+                            plugins: ['remove_button'],
+                        });
+                });
+           });
+
+           $("#all-tasks").click();
+
+           $(".follow").click(function () {
+                var id = $(this).attr('data-id');
+
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("followTask", "Task")',
+                    contentType: "application/json; charset=utf-8",
+                    data: { "id": id },
+                    datatype: "json",
+                    success: function (data) {
+                        location.reload();
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+             
+           });
+
+           $(".done").click(function () {
+                var id = $(this).attr('data-id');
+
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("doneTask", "Task")',
+                    contentType: "application/json; charset=utf-8",
+                    data: { "id": id },
+                    datatype: "json",
+                    success: function (data) {
+                        location.reload();
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            
+           });
+
+           $(".delete").click(function () {
+                var id = $(this).attr('data-id');
+
+                warningBox("Are you sure you want to delete this Task?", function () {
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Action("deleteTask", "Task")',
+                        contentType: "application/json; charset=utf-8",
+                        data: { "id": id },
+                        datatype: "json",
+                        success: function (data) {
+                            location.reload();
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+                });
+            });
+
+
+        });
+
+    </script>
+}
+
+
