@@ -27,7 +27,7 @@ namespace RiplTrackingSystem.Controllers
         {
             User currentUser = Session["user"] as User;
 
-            if (!can.hasPermission("access_asset")) //hazemm
+            if (!can.hasPermission("access_asset"))
             {
                 
                 Helpers.Helpers.SystemLogger(currentUser.id, "Access Assets", String.Empty, String.Empty, "Tring to access Assets but has no permission");
