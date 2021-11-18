@@ -149,6 +149,9 @@
     <link href="~/Content/assets/css/forms/theme-checkbox-radio.css" rel="stylesheet" type="text/css">
 
     <link href="~/Content/assets/css/dashboard/dash_1.css" rel="stylesheet" type="text/css" />
+                                        <!-- Added css style by AA -->
+    <link href="~/Content/assets/css/customizedByAbdullah.css" rel="stylesheet" type="text/css" />
+
 </head>
 <body class="alt-menu sidebar-noneoverflow">
     <!-- BEGIN LOADER -->
@@ -237,7 +240,7 @@
 
                 @if (currrentUser.location_id != null)
                 {
-                    <li class="nav-item dropdown notification-dropdown"  title="Transactions">
+                    <li class="nav-item dropdown notification-dropdown" title="Transactions">
                         <a href="javascript:void(0);" class="nav-link dropdown-toggle" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg><span class="badge badge-success"></span>
                         </a>
@@ -249,16 +252,16 @@
                                         <div class="media server-log">
                                             <a target="_blank" href="@Url.Action("openTransaction","LocationAsset",new { id= transaction.id})">
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-server"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6" y2="6"></line><line x1="6" y1="18" x2="6" y2="18"></line></svg>
-                                            </a>    
-                                                <div class="media-body">
-                                                    <div class="data-info">
-                                                        <a target="_blank" href="@Url.Action("openTransaction","LocationAsset",new { id= transaction.id})"><h6 class="">@transaction.stringFromLocation</h6></a>
-                                                        <a target="_blank" href="@Url.Action("openTransaction","LocationAsset",new { id= transaction.id})"><p class="">@transaction.stringUser</p></a>
-                                                        <a target="_blank" href="@Url.Action("openTransaction","LocationAsset",new { id= transaction.id})"><p class="">@transaction.created_at</p></a>
-                                                        <a target="_blank" href="@Url.Action("openTransaction","LocationAsset",new { id= transaction.id})"><p class="">@transaction.assetes_count Assets</p></a>
-                                                    </div>
+                                            </a>
+                                            <div class="media-body">
+                                                <div class="data-info">
+                                                    <a target="_blank" href="@Url.Action("openTransaction","LocationAsset",new { id= transaction.id})"><h6 class="">@transaction.stringFromLocation</h6></a>
+                                                    <a target="_blank" href="@Url.Action("openTransaction","LocationAsset",new { id= transaction.id})"><p class="">@transaction.stringUser</p></a>
+                                                    <a target="_blank" href="@Url.Action("openTransaction","LocationAsset",new { id= transaction.id})"><p class="">@transaction.created_at</p></a>
+                                                    <a target="_blank" href="@Url.Action("openTransaction","LocationAsset",new { id= transaction.id})"><p class="">@transaction.assetes_count Assets</p></a>
                                                 </div>
-</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 }
                                 <div class="dropdown-item">
@@ -287,13 +290,13 @@
                                     <div class="dropdown-item">
                                         <div class="media server-log">
                                             <img src="@attachment.path" width="40" height="40" />
-                                     
-                                                <div class="media-body">
-                                                    <div class="data-info">
-                                                        <a target="_blank" href="@attachment.path"><h6 class="location_attachment">@attachment.description</h6></a>
-                                                    </div>
+
+                                            <div class="media-body">
+                                                <div class="data-info">
+                                                    <a target="_blank" href="@attachment.path"><h6 class="location_attachment">@attachment.description</h6></a>
                                                 </div>
-</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 }
                             </div>
@@ -308,14 +311,14 @@
                             </div>
                             <img src="~/images/userProfile.jpeg" class="img-fluid">
                             @*@if (!String.IsNullOrWhiteSpace(Session["image"].ToString()))
-                    {
-                        <img src="@Session["image"].ToString()" class="img-fluid">
-                    }
-                    else
-                    {
-                        <img src="~/images/userProfile.jpeg" class="img-fluid">
+                                {
+                                    <img src="@Session["image"].ToString()" class="img-fluid">
+                                }
+                                else
+                                {
+                                    <img src="~/images/userProfile.jpeg" class="img-fluid">
 
-                    }*@
+                                }*@
                             <span class="badge badge-success"></span>
                         </div>
                     </a>
@@ -436,8 +439,8 @@
                             <li>
                                 <a href="@Url.Action("Index","Task")"> Task List </a>
                             </li>
-                            @if(currrentUser.location_id == null)
-                            { 
+                            @if (currrentUser.location_id == null)
+                            {
                                 <li>
                                     <a href="@Url.Action("Index","LocationAttachment")"> Invoices </a>
                                 </li>
@@ -684,6 +687,7 @@
     <script src="~/Content/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/Content/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="~/Content/assets/js/app.js"></script>
+
     <script>
             $(document).ready(function () {
                 App.init();

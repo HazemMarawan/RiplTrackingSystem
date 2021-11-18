@@ -1,0 +1,194 @@
+
+
+/* back ground color */
+body {
+    background-color: #e9f0fa;
+}
+
+
+                                      /* TABLES */
+
+/* main table measurements*/
+.widget-content-area,
+.card-body {
+    border-radius: 25px !important;
+    border: 2px solid #e9f0fa;
+    box-shadow: 0px 0px 15px 2px lightgray;
+    padding: 0px;
+}
+
+
+/* main header and footer of table */
+/* positions*/
+div.dataTables_wrapper div.dataTables_filter {
+    text-align: left;
+    height: 55px;
+}
+
+div.dataTables_wrapper div.dataTables_filter label {
+    margin: 10px;
+}
+
+div.dataTables_wrapper div.dataTables_info {
+    margin: 10px;
+}
+        /* measurements*/
+div.dataTables_wrapper div.dataTables_filter input {
+    width: 300px;
+}
+
+.dataTables_wrapper .form-control,
+.card {
+    border-radius: 25px;
+}
+
+div.dataTables_wrapper div.dataTables_info {
+    width: 300px;
+    border-radius: 25px;
+}
+        /* text colors */
+.dataTable.table-striped.table > thead > tr > th {
+    color: #9ea5cf;
+    font-weight: bolder;
+}
+
+/* rows colors and hovering effects */
+
+.dataTable.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #ecf3fd !important;
+}
+
+.table-striped tbody tr {
+    background-color: #fafbfd !important;
+}
+                    /* hover*/
+/*
+.dataTable.table-striped tbody tr td:hover {
+    background-color: lightgrey !important;
+}
+
+.dataTable.table-striped tbody tr:hover {
+    background-color: lightcoral !important;
+}*/
+        /* text colors */
+table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td {
+    color: #7d8aa5;
+}
+
+.dataTable.table-striped tbody tr:nth-of-type(odd) td {
+    color: #7d8aa5;
+    font-weight: bold;
+}
+/* deleting things that we don't need search and top line of header row*/
+
+.dataTable.table-striped.table > thead > tr > th {
+    border-top: none!important; 
+}
+
+.card-body { padding: 0px}
+
+/*pagination */
+.page-item:first-child .page-link, .page-item:last-child .page-link {
+    border-radius: 25px;
+    padding: 10px 9px;
+}
+
+
+/* available assets edit*/
+.avaiableAssets-edit {
+    margin:0px;
+
+}
+
+.avaiableAssets-edit > tbody > tr,
+.avaiableAssets-edit > thead > tr {
+        border: 0px
+    }
+
+.avaiableAssets-edit > thead > tr > th:nth-child(1) {
+    border-radius:25px 0px 0px 0px;
+}
+
+.avaiableAssets-edit > thead > tr > th:nth-child(4) {
+    border-radius: 0px 25px 0px 0px;
+}
+                                /* END OF TABLES*/
+
+                                /* FILTER AND SEARCH*/
+
+
+
+.page-header {
+    margin-bottom: 10px;
+}
+
+.form-control {
+    border-radius: 25px;
+}
+
+.form-group button,
+.row div input,
+.row div a
+{
+    border-radius: 25px;
+    margin: 0px 5px;
+}
+.form-group button,
+.row div input[type=button],
+.row div a {
+    margin-left: 15px;
+    margin-right: 5px;
+}
+
+.page-header .custom-dropdown-icon a.dropdown-toggle {
+    border-radius: 25px;
+}
+
+.topping-edit,
+.topping-edit .card-body {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+                                /* calendar*/
+input[type="date"] {
+    background-color: white;
+    padding: 15px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    color: #3b3f5c;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    width: 90%
+}
+
+::-webkit-calendar-picker-indicator {
+    background-color: #ffffff;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+                            /* end of calendar*/
+                            /* more button*/
+.dropdown.show {
+    margin-bottom:60px
+}
+
+.dropdown.show .dropdown-menu {
+    display: inline-flex;
+    border-radius: 10px;
+    border: 2px solid #c2d1e7;
+}
+
+.page-header .custom-dropdown-icon .dropdown-menu a {
+    border-right: 1px solid #c2d1e7;
+}
+
+.page-header .custom-dropdown-icon .dropdown-menu a:nth-last-child(1) {
+    border-right: 0px;
+}
+                        /* end of more button */

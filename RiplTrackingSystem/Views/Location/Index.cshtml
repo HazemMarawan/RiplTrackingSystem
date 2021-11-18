@@ -129,11 +129,11 @@
                             </div>
                             <input type="hidden" name="location_id" id="location_id" />
 
-                        <div class="form-group col-md-6">
-                            <label>Personal Photo</label> <br />
-                            <input type="file" onchange="loadFile(event)" class="form-control" id="image" name="image" aria-describedby="inputGroupFileAddon01">
-                        </div>
-           
+                            <div class="form-group col-md-6">
+                                <label>Personal Photo</label> <br />
+                                <input type="file" onchange="loadFile(event)" class="form-control" id="image" name="image" aria-describedby="inputGroupFileAddon01">
+                            </div>
+
                             <div class="form-group col-md-6">
                                 <label>Status</label>
                                 <select class="form-control" name="active" id="active">
@@ -155,86 +155,107 @@
     </form>
 </div>
 
-@if (ViewBag.isRipl == true) 
-{ 
-<div class="page-header">
-    <nav class="breadcrumb-one" aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Dashboad</a></li>
-        </ol>
-    </nav>
-    <div class="dropdown filter custom-dropdown-icon">
-        <a class="dropdown-toggle btn" href="#" role="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="text">More</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg></a>
+@if (ViewBag.isRipl == true)
+{
+    <div class="page-header">
+        <nav class="breadcrumb-one" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Dashboad</a></li>
+            </ol>
+        </nav>
+        <div class="dropdown filter custom-dropdown-icon">
+            <a class="dropdown-toggle btn" href="#" role="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="text">More</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg></a>
 
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="filterDropdown">
-            <a class="dropdown-item" id="add_location_group" href="javascript:void(0);">Add Location</a>
-            <a class="dropdown-item" id="export_locations" data-value="<span>Show</span> : Export Locations" href="javascript:void(0);">Export Locations</a>
-            <a class="dropdown-item" id="export_locations_with_hierarchy" data-value="<span>Show</span> : Export Locations With Hierarchy" href="javascript:void(0);">Export Locations With Hierarchy</a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="filterDropdown">
+                <a class="dropdown-item" id="add_location_group" href="javascript:void(0);">Add Location</a>
+                <a class="dropdown-item" id="export_locations" data-value="<span>Show</span> : Export Locations" href="javascript:void(0);">Export Locations</a>
+                <a class="dropdown-item" id="export_locations_with_hierarchy" data-value="<span>Show</span> : Export Locations With Hierarchy" href="javascript:void(0);">Export Locations With Hierarchy</a>
 
 
-        </div>
-    </div>
-</div>
-}
-
-    <div class="card radius-15">
-        <div class="card-body">
-            <form id="filter_form" action="" method="post">
-                <input id="location_report_type" name="location_report_type" type="hidden" />
-                <div class="row">
-                    <div class="form-group col-3">
-                        <input class="form-control" type="text" id="text_search" name="text_search" placeholder="Search">
-                    </div>
-                    <div class="form-group col-md-3">
-                        @Html.DropDownList("location_id_search", new SelectList(ViewBag.locations, "id", "name"), "Select Location", new { @class = "form-control", @name = "location_id_search", @id = "location_id_search" })
-                    </div>
-                    <div class="form-group col-3">
-                        <input class="form-control" type="date" id="date_form_search" name="date_form_search">
-                    </div>
-                    <div class="form-group col-3">
-                        <input class="form-control" type="date" id="date_to_search" name="date_to_search">
-                    </div>
-                    <div class="form-group col-2">
-                        <button id="search" type="button" class="btn btn-primary px-3 radius-30">Search</button>
-                    </div>
-                    <div class="form-group col-2">
-                        <button id="reset" class="btn btn-danger px-3 radius-30">Reset</button>
-                    </div>
-
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="row layout-top-spacing" id="cancel-row">
-
-        <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
-            <div class="widget-content widget-content-area br-6">
-                <table id="locationsTable" class="table table-striped table-bordered" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Asset Count</th>
-                            <th>Phone</th>
-                            <th>Address</th>
-                            <th>Can Send Pluck</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-
-                </table>
             </div>
         </div>
     </div>
+}
+
+<div class="card topping-edit radius-15">
+    <div class="card-body">
+        <form id="filter_form" action="" method="post">
+            <input id="location_report_type" name="location_report_type" type="hidden" />
+            <div class="row">
+                <div class="form-group col-3">
+                    <input class="form-control" type="text" id="text_search" name="text_search" placeholder="Search">
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.DropDownList("location_id_search", new SelectList(ViewBag.locations, "id", "name"), "Select Location", new { @class = "form-control", @name = "location_id_search", @id = "location_id_search" })
+                </div>
+                <div class="form-group col-3">
+                    <input class="form-control" type="date" id="date_form_search" name="date_form_search">
+                </div>
+                <div class="form-group col-3">
+                    <input class="form-control" type="date" id="date_to_search" name="date_to_search">
+                </div>
+                <!-- bootstrap classes col and col-3 removed by AA -->
+                <div class="form-group ">
+                    <button id="search" type="button" class="btn btn-primary px-3 radius-30">Search</button>
+                </div>
+                <div class="form-group ">
+                    <button id="reset" class="btn btn-danger px-3 radius-30">Reset</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row layout-top-spacing" id="cancel-row">
+
+    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+        <div class="widget-content widget-content-area br-6">
+            <table id="locationsTable" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Asset Count</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Can Send Pluck</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+            </table>
+        </div>
+    </div>
+</div>
 
 @section scripts
 {
+   
     <script>
-       $(document).ready(function () {
+        $(document).ready(function () {
 
            var datatable = $('#locationsTable')
                .DataTable({
+
+                   "dom": "<'dt--top-section'<'row'<'col-sm-12 col-md-6 d-flex justify-content-md-start justify-content-center'B><'col-sm-12 col-md-6 d-flex justify-content-md-end justify-content-center mt-md-0 mt-3'f>>>" +
+                       "<'table-responsive'tr>" +
+                       "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
+                   "buttons": {
+                       buttons: [
+                           { extend: 'copy', className: 'btn btn-sm' },
+                           { extend: 'csv', className: 'btn btn-sm' },
+                           { extend: 'excel', className: 'btn btn-sm' },
+                           { extend: 'print', className: 'btn btn-sm' }
+                       ]
+                   },
+                   "oLanguage": {
+                       "oPaginate": { "sPrevious": 'Perivous', "sNext": 'Next' },
+                       "sInfo": "Showing page _PAGE_ of _PAGES_",
+                       "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+                       "sSearchPlaceholder": "Search...",
+                       "sLengthMenu": "Results :  _MENU_",
+                   },
                    "processing": true,
                    "serverSide": true,
                    "scrollX": true,
@@ -312,7 +333,8 @@
                             }
                         },
                     ]
-                });
+               });
+
 
             $('#search').on('click', function () {
                 datatable.search($("#text_search").val());
@@ -570,5 +592,6 @@
         });
 
     </script>
-    }
+
+}
 
