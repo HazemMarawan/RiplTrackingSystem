@@ -167,7 +167,8 @@
 </div>
 
 <div class="page-header">
-    <nav class="breadcrumb-one" aria-label="breadcrumb">
+    <!-- two instead of one to change style by AA -->
+    <nav class="breadcrumb-two" aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Dashborad</a></li>
             <li class="breadcrumb-item"><a href="@Url.Action("Index","Location")">Locations</a></li>
@@ -204,7 +205,8 @@
 
     <div class="row layout-top-spacing">
         <div id="tabsIcons" class="col-lg-12 col-12 layout-spacing">
-            <div class="statbox widget box box-shadow">
+            <!-- class added locations-edit-statbox by AA-->
+            <div class="locations-edit-statbox statbox widget box box-shadow">
                 <div class="widget-header">
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
@@ -214,8 +216,7 @@
                 </div>
 
                 <div class="widget-content widget-content-area icon-tab">
-
-                    <ul class="nav nav-tabs  mb-3 mt-3" id="iconTab" role="tablist">
+                <ul class="nav nav-tabs  mb-3 mt-3" id="iconTab" role="tablist">
                         @if (Model.type == 1)
                         {
                             <li class="nav-item dropdown">
@@ -248,8 +249,9 @@
                             <div class="row layout-top-spacing" id="cancel-row">
 
                                 <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
-                                    <div class="widget-content widget-content-area br-6">
-                                        
+                                    <!-- class added locations-edit-table by AA-->
+                                    <div class="widget-content widget-content-area br-6 locations-edit-table">
+
                                     </div>
                                 </div>
                             </div>
@@ -259,7 +261,8 @@
                         <div class="tab-pane fade" id="icon-factory-users" role="tabpanel" aria-labelledby="icon-factory-users-2">
                             <div class="row layout-top-spacing" id="cancel-row2">
                                 <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
-                                    <div class="widget-content widget-content-area br-6">
+                                    <!-- class added locations-edit-table by AA-->
+                                    <div class="widget-content widget-content-area br-6 locations-edit-table">
                                         <table id="factoryUsersTable" class="table table-hover" style="width:100%">
                                             <thead>
                                                 <tr>
@@ -284,7 +287,8 @@
                         <div class="tab-pane fade @distributorShowActive" id="icon-distributor" role="tabpanel" aria-labelledby="icon-distributor-1">
                             <div class="row layout-top-spacing" id="cancel-row3">
                                 <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
-                                    <div class="widget-content widget-content-area br-6">
+                                    <!-- class added locations-edit-table by AA-->
+                                    <div class="widget-content widget-content-area br-6 locations-edit-table">
                                         <table id="distributorsTable" class="table table-hover" style="width:100%">
                                             <thead>
                                                 <tr>
@@ -309,7 +313,8 @@
                         <div class="tab-pane fade" id="icon-distributor-users" role="tabpanel" aria-labelledby="icon-distributor-users-2">
                             <div class="row layout-top-spacing" id="cancel-row4">
                                 <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
-                                    <div class="widget-content widget-content-area br-6">
+                                    <!-- class added locations-edit-table by AA-->
+                                    <div class="widget-content widget-content-area br-6 locations-edit-table">
                                         <table id="distributorsUsersTable" class="table table-hover" style="width:100%">
                                             <thead>
                                                 <tr>
@@ -335,7 +340,8 @@
                         <div class="tab-pane fade @storeShowActive" id="icon-store" role="tabpanel" aria-labelledby="icon-store-1">
                             <div class="row layout-top-spacing" id="cancel-row5">
                                 <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
-                                    <div class="widget-content widget-content-area br-6">
+                                    <!-- class added locations-edit-table by AA-->
+                                    <div class="widget-content widget-content-area br-6 locations-edit-table">
                                         <table id="storesTable" class="table table-hover" style="width:100%">
                                             <thead>
                                                 <tr>
@@ -360,7 +366,8 @@
                         <div class="tab-pane fade" id="icon-store-users" role="tabpanel" aria-labelledby="icon-store-users-2">
                             <div class="row layout-top-spacing" id="cancel-row6">
                                 <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
-                                    <div class="widget-content widget-content-area br-6">
+                                    <!-- class added locations-edit-table by AA-->
+                                    <div class="widget-content widget-content-area br-6 locations-edit-table">
                                         <table id="storeUsersTable" class="table table-hover" style="width:100%">
                                             <thead>
                                                 <tr>
@@ -384,7 +391,8 @@
                         <div class="tab-pane fade" id="icon-company-users-tab" role="tabpanel" aria-labelledby="icon-company-users">
                             <div class="row layout-top-spacing" id="cancel-row7">
                                 <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
-                                    <div class="widget-content widget-content-area br-6">
+                                    <!-- class added locations-edit-table by AA-->
+                                    <div class="widget-content widget-content-area br-6 locations-edit-table">
                                         <table id="companyUsersTable" class="table table-hover non-hover" style="width:100%">
                                             <thead>
                                                 <tr>
@@ -420,7 +428,24 @@
 
         var factoriesTable = $('#factoriesTable')
             .DataTable({
-
+                "dom": "<'dt--top-section'<'row'<'col-sm-12 col-md-6 d-flex justify-content-md-start justify-content-center'B><'col-sm-12 col-md-6 d-flex justify-content-md-end justify-content-center mt-md-0 mt-3'f>>>" +
+                    "<'table-responsive'tr>" +
+                    "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
+                "buttons": {
+                    buttons: [
+                        { extend: 'copy', className: 'btn btn-sm' },
+                        { extend: 'csv', className: 'btn btn-sm' },
+                        { extend: 'excel', className: 'btn btn-sm' },
+                        { extend: 'print', className: 'btn btn-sm' }
+                    ]
+                },
+                "oLanguage": {
+                    "oPaginate": { "sPrevious": 'Perivous', "sNext": 'Next' },
+                    "sInfo": "Showing page _PAGE_ of _PAGES_",
+                    "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+                    "sSearchPlaceholder": "Search...",
+                    "sLengthMenu": "Results :  _MENU_",
+                },
                 "processing": true,
                 "serverSide": true,
                 "scrollX": true,
@@ -492,7 +517,24 @@
             });
         var factoryUsersTable = $('#factoryUsersTable')
             .DataTable({
-
+                "dom": "<'dt--top-section'<'row'<'col-sm-12 col-md-6 d-flex justify-content-md-start justify-content-center'B><'col-sm-12 col-md-6 d-flex justify-content-md-end justify-content-center mt-md-0 mt-3'f>>>" +
+                    "<'table-responsive'tr>" +
+                    "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
+                "buttons": {
+                    buttons: [
+                        { extend: 'copy', className: 'btn btn-sm' },
+                        { extend: 'csv', className: 'btn btn-sm' },
+                        { extend: 'excel', className: 'btn btn-sm' },
+                        { extend: 'print', className: 'btn btn-sm' }
+                    ]
+                },
+                "oLanguage": {
+                    "oPaginate": { "sPrevious": 'Perivous', "sNext": 'Next' },
+                    "sInfo": "Showing page _PAGE_ of _PAGES_",
+                    "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+                    "sSearchPlaceholder": "Search...",
+                    "sLengthMenu": "Results :  _MENU_",
+                },
                 "processing": true,
                 "serverSide": true,
                 "scrollX": true,
@@ -597,7 +639,24 @@
 
         var storesTable = $('#storesTable')
             .DataTable({
-
+                "dom": "<'dt--top-section'<'row'<'col-sm-12 col-md-6 d-flex justify-content-md-start justify-content-center'B><'col-sm-12 col-md-6 d-flex justify-content-md-end justify-content-center mt-md-0 mt-3'f>>>" +
+                    "<'table-responsive'tr>" +
+                    "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
+                "buttons": {
+                    buttons: [
+                        { extend: 'copy', className: 'btn btn-sm' },
+                        { extend: 'csv', className: 'btn btn-sm' },
+                        { extend: 'excel', className: 'btn btn-sm' },
+                        { extend: 'print', className: 'btn btn-sm' }
+                    ]
+                },
+                "oLanguage": {
+                    "oPaginate": { "sPrevious": 'Perivous', "sNext": 'Next' },
+                    "sInfo": "Showing page _PAGE_ of _PAGES_",
+                    "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+                    "sSearchPlaceholder": "Search...",
+                    "sLengthMenu": "Results :  _MENU_",
+                },
                 "processing": true,
                 "serverSide": true,
                 "scrollX": true,
@@ -668,7 +727,24 @@
             });
         var storesUsersTable = $('#storeUsersTable')
             .DataTable({
-
+                "dom": "<'dt--top-section'<'row'<'col-sm-12 col-md-6 d-flex justify-content-md-start justify-content-center'B><'col-sm-12 col-md-6 d-flex justify-content-md-end justify-content-center mt-md-0 mt-3'f>>>" +
+                    "<'table-responsive'tr>" +
+                    "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
+                "buttons": {
+                    buttons: [
+                        { extend: 'copy', className: 'btn btn-sm' },
+                        { extend: 'csv', className: 'btn btn-sm' },
+                        { extend: 'excel', className: 'btn btn-sm' },
+                        { extend: 'print', className: 'btn btn-sm' }
+                    ]
+                },
+                "oLanguage": {
+                    "oPaginate": { "sPrevious": 'Perivous', "sNext": 'Next' },
+                    "sInfo": "Showing page _PAGE_ of _PAGES_",
+                    "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+                    "sSearchPlaceholder": "Search...",
+                    "sLengthMenu": "Results :  _MENU_",
+                },
                 "processing": true,
                 "serverSide": true,
                 "scrollX": true,
@@ -773,7 +849,24 @@
 
         var distributorsTable = $('#distributorsTable')
             .DataTable({
-
+                "dom": "<'dt--top-section'<'row'<'col-sm-12 col-md-6 d-flex justify-content-md-start justify-content-center'B><'col-sm-12 col-md-6 d-flex justify-content-md-end justify-content-center mt-md-0 mt-3'f>>>" +
+                    "<'table-responsive'tr>" +
+                    "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
+                "buttons": {
+                    buttons: [
+                        { extend: 'copy', className: 'btn btn-sm' },
+                        { extend: 'csv', className: 'btn btn-sm' },
+                        { extend: 'excel', className: 'btn btn-sm' },
+                        { extend: 'print', className: 'btn btn-sm' }
+                    ]
+                },
+                "oLanguage": {
+                    "oPaginate": { "sPrevious": 'Perivous', "sNext": 'Next' },
+                    "sInfo": "Showing page _PAGE_ of _PAGES_",
+                    "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+                    "sSearchPlaceholder": "Search...",
+                    "sLengthMenu": "Results :  _MENU_",
+                },
                 "processing": true,
                 "serverSide": true,
                 "scrollX": true,
@@ -839,7 +932,24 @@
 
         var distributorsUsersTable = $('#distributorsUsersTable')
             .DataTable({
-
+                "dom": "<'dt--top-section'<'row'<'col-sm-12 col-md-6 d-flex justify-content-md-start justify-content-center'B><'col-sm-12 col-md-6 d-flex justify-content-md-end justify-content-center mt-md-0 mt-3'f>>>" +
+                    "<'table-responsive'tr>" +
+                    "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
+                "buttons": {
+                    buttons: [
+                        { extend: 'copy', className: 'btn btn-sm' },
+                        { extend: 'csv', className: 'btn btn-sm' },
+                        { extend: 'excel', className: 'btn btn-sm' },
+                        { extend: 'print', className: 'btn btn-sm' }
+                    ]
+                },
+                "oLanguage": {
+                    "oPaginate": { "sPrevious": 'Perivous', "sNext": 'Next' },
+                    "sInfo": "Showing page _PAGE_ of _PAGES_",
+                    "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+                    "sSearchPlaceholder": "Search...",
+                    "sLengthMenu": "Results :  _MENU_",
+                },
                 "processing": true,
                 "serverSide": true,
                 "scrollX": true,
@@ -944,7 +1054,24 @@
 
        var companyUsersTable = $('#companyUsersTable')
             .DataTable({
-
+                "dom": "<'dt--top-section'<'row'<'col-sm-12 col-md-6 d-flex justify-content-md-start justify-content-center'B><'col-sm-12 col-md-6 d-flex justify-content-md-end justify-content-center mt-md-0 mt-3'f>>>" +
+                    "<'table-responsive'tr>" +
+                    "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
+                "buttons": {
+                    buttons: [
+                        { extend: 'copy', className: 'btn btn-sm' },
+                        { extend: 'csv', className: 'btn btn-sm' },
+                        { extend: 'excel', className: 'btn btn-sm' },
+                        { extend: 'print', className: 'btn btn-sm' }
+                    ]
+                },
+                "oLanguage": {
+                    "oPaginate": { "sPrevious": 'Perivous', "sNext": 'Next' },
+                    "sInfo": "Showing page _PAGE_ of _PAGES_",
+                    "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+                    "sSearchPlaceholder": "Search...",
+                    "sLengthMenu": "Results :  _MENU_",
+                },
                 "processing": true,
                 "serverSide": true,
                 "scrollX": true,

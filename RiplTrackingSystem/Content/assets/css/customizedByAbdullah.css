@@ -192,3 +192,374 @@ input[type="date"] {
     border-right: 0px;
 }
                         /* end of more button */
+
+                        /* tables of choosen location*/
+
+.dataTables_scrollHeadInner {/* fixing the extension of first line*/
+    width: 100%!important;
+}
+
+.locations-edit-statbox {/* removing outter lines*/
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+.locations-edit-statbox .widget-header { 
+    background:transparent!important;
+}
+
+.layout-spacing .locations-edit-table { /* removing outter lines*/
+    border: none;
+    box-shadow: none;
+    border-radius: 0px;
+}
+
+.tab-pane .layout-spacing { /* removing extra spaces @ bot*/
+    padding-bottom: 0px;
+}
+
+.locations-edit-statbox .nav-link.active {
+    color: green
+}
+
+.locations-edit-statbox .nav-link { 
+    border-top-left-radius: 10px!important;
+    border-top-right-radius: 10px!important; 
+}
+
+                         /* end of tables of chosen location*/
+
+/*
+.breadcrumb {
+    background-color: transparent;
+    margin-bottom: 0;
+}
+.breadcrumb-two .breadcrumb {
+    list-style: none;
+    overflow: hidden;
+    padding: 0;
+}
+
+.breadcrumb-two .breadcrumb li {
+    float: left;
+}
+
+.breadcrumb-two .breadcrumb-item + .breadcrumb-item::before {
+    color: #fff;
+}
+
+.breadcrumb-two .breadcrumb li a {
+    color: #4361ee;
+    text-decoration: none;
+    padding: 6px 0 6px 40px;
+    background: white !important;
+    position: relative;
+    display: block;
+    float: left;
+    border: 1px solid #4361ee
+}
+
+    .breadcrumb-two .breadcrumb li a:after {
+        content: " ";
+        display: block;
+        width: 0;
+        height: 0;
+        border-top: 50px solid transparent;
+        /* Go big on the size, and let overflow hide *//*
+        border-bottom: 50px solid transparent;
+        border-left: 30px solid #4361ee;
+        position: absolute;
+        top: 50%;
+        margin-top: -50px;
+        left: 100%;
+        z-index: 2;
+    }
+
+.breadcrumb-two .breadcrumb li a:before {
+    content: " ";
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 50px solid transparent;
+    /* Go big on the size, and let overflow hide *//*
+    border-bottom: 50px solid transparent;
+    border-left: 30px solid #ebedf2;
+    position: absolute;
+    top: 50%;
+    margin-top: -50px;
+    margin-left: 1px;
+    left: 100%;
+    z-index: 1;
+}
+
+.breadcrumb-two .breadcrumb li:last-child a:before {
+    margin-left: -6px;
+    border-left:none;
+}
+
+.breadcrumb-two .breadcrumb li:first-child a {
+    padding-left: 10px;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+.breadcrumb-two .breadcrumb li.active a {
+    background: #4361ee!important;
+    color: #fff;
+}
+
+.breadcrumb-two .breadcrumb li.active a:after {
+    border-left-color: #4361ee;
+}
+
+.breadcrumb-two .breadcrumb li:last-child a {
+    pointer-events: none;
+    cursor: default;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border: 1px solid #4361ee
+}
+
+    .breadcrumb-two .breadcrumb li:last-child a:after {
+        border: 1px solid #4361ee
+    }
+*/
+
+.breadcrumb {
+    background-color: transparent;
+    margin-bottom: 0;
+}
+
+.breadcrumb-two .breadcrumb {
+    list-style: none;
+    overflow: hidden;
+    padding: 0;
+}
+
+    .breadcrumb-two .breadcrumb li {
+        float: left;
+    }
+
+.breadcrumb-two .breadcrumb-item + .breadcrumb-item::before {
+    color: #fff;
+}
+
+.breadcrumb-two .breadcrumb li a {
+    color: #4361ee;
+    text-decoration: none;
+    padding: 6px 0 6px 40px;
+    background: #ebedf2;
+    position: relative;
+    display: block;
+    float: left;
+}
+
+    .breadcrumb-two .breadcrumb li a:after {
+        content: " ";
+        display: block;
+        width: 0;
+        height: 0;
+        border-top: 50px solid transparent;
+        /* Go big on the size, and let overflow hide */
+        border-bottom: 50px solid transparent;
+        border-left: 30px solid #ebedf2;
+        position: absolute;
+        top: 50%;
+        margin-top: -50px;
+        left: 100%;
+        z-index: 2;
+    }
+
+    .breadcrumb-two .breadcrumb li a:before {
+        content: " ";
+        display: block;
+        width: 0;
+        height: 0;
+        border-top: 50px solid transparent;
+        /* Go big on the size, and let overflow hide */
+        border-bottom: 50px solid transparent;
+        border-left: 30px solid #ebedf2;
+        position: absolute;
+        top: 50%;
+        margin-top: -50px;
+        margin-left: 1px;
+        left: 100%;
+        z-index: 1;
+    }
+
+.breadcrumb-two .breadcrumb li:last-child a:before {
+    margin-left: -6px;
+}
+
+.breadcrumb-two .breadcrumb li:first-child a {
+    padding-left: 10px;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+.breadcrumb-two .breadcrumb li.active a {
+    background: #4361ee;
+    color: #fff;
+}
+
+    .breadcrumb-two .breadcrumb li.active a:after {
+        border-left-color: #4361ee;
+    }
+
+.breadcrumb-two .breadcrumb li:last-child a {
+    pointer-events: none;
+    cursor: default;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+    .breadcrumb-two .breadcrumb li:last-child a:after {
+        border: none;
+    }
+
+                        /* end of bread crump */
+
+                        /* navbar*/
+
+.topbar-nav.header nav#topbar ul.menu-categories li.menu > a {
+    border: 1px solid #4361ee;
+    padding: 15px 11px;
+    border-radius: 25px;
+    color: #4361ee;
+    margin-right:20px;
+}
+
+.topbar-nav.header nav#topbar ul.menu-categories li.menu > a:hover {
+    border: 1px solid #4361ee;
+    padding: 15px 11px;
+    border-radius: 25px;
+    color: white;
+    background-color: #4361ee;
+}
+
+.topbar-nav.header nav#topbar ul.menu-categories li.menu a > div span {
+    color: #4361ee;
+}
+
+.topbar-nav.header nav#topbar ul.menu-categories li.menu a:hover > div span {
+  color: white
+}
+
+.topbar-nav.header nav#topbar ul.menu-categories li.menu a > div svg:not(.feather-chevron-down) {
+    color: #4361ee;
+}
+
+.topbar-nav.header nav#topbar ul.menu-categories li.menu a:hover > div svg:not(.feather-chevron-down){
+    color: white;
+}
+
+.topbar-nav.header nav#topbar ul.menu-categories li.menu > a svg.feather.feather-chevron-down {
+    color: #4361ee;
+}
+
+.topbar-nav.header nav#topbar ul.menu-categories li.menu > a:hover svg.feather.feather-chevron-down {
+    color: white;
+}
+            /* end of navbar */
+
+                                    /* mail box page */
+/* fixing all measurements*/
+.tab-title .row div a,
+.mailbox-inbox .row div a,
+.mailbox-inbox .row div input {
+    margin: 0px!important;
+}
+
+.mailbox-inbox .search input {
+    margin: 0px !important;
+}
+#btn-send-mail {
+    background-color: #4361ee;
+}
+.mail-btn-container a svg {
+    color: white
+}
+ /* popup of mail */
+                
+.mail-subject svg {
+    color: #4361ee;
+    margin-right: 5px;
+    margin-top:5px
+}
+
+.compose-box .selectize-input {
+    border-radius: 25px
+}
+.compose-box .selectize-dropdown,
+.compose-box .selectize-dropdown .selectize-dropdown-content {
+    border-radius: 25px
+}
+
+.compose-box #subject {
+    height: auto;
+    padding: 8px 10px;
+    margin-top: 1px;
+}
+
+.mail-form svg {
+    color: #4361ee;
+    margin-right: 5px;
+    margin-top: 5px
+}
+.mail-form textarea {
+    border-radius: 25px;
+    border-color: #bfc9d4;
+    padding:10px;
+    width: 100%
+}
+
+.input-group
+{
+    border-radius: 25px; 
+    overflow:hidden
+}
+.input-group-prepend {
+    margin: 0px;
+}
+
+.input-group-prepend .input-group-text {
+    border: none !important;
+    padding-top: 8px;
+    font-size: 15px;
+    color: purple;
+}
+
+.custom-file-label {
+    border: none;
+    border-radius: unset
+}
+
+.custom-file-label::after {
+    background-color: #f1f2f3
+}
+
+.modal-footer #btn-send {
+    background-color: white;
+    color: green;
+    font-weight:bold
+}
+
+                                    /* send page pop up */
+.modal-dialog .form-control.radius-30 {
+    padding: 7px 20px
+}
+
+.modal-dialog .form-group input[type=date] {
+        margin: 15px 0px;
+        border: 2px solid green;
+        padding: 7px
+}
+
+.modal-dialog .form-group:nth-last-child(1){
+    margin-top: 25px;
+}
+
