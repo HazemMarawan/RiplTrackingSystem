@@ -279,7 +279,7 @@
                             "data": "name", "searchable": true,
                             fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                                 var html = "";
-                                html += "<a id='" + oData.id + "' href='/Location/Show?id=" + oData.id + "' title='Show'>" + oData.name + "</a>";
+                                html += "<a id='" + oData.id + "' href='/Location/Show?id=" + oData.id + "' title='Show' style='color: #4361ee'>" + oData.name + "</a>";/* style added by AA */
 
                                 $(nTd).html("<span class='action-column'>" + html + "</span>");
                             }

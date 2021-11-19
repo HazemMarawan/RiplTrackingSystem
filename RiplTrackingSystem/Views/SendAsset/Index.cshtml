@@ -207,7 +207,7 @@
                             "data": "assets_count", "searchable": true,
                             fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                                 var html = '';
-                                html += "<a class='assetDetails' href='javascript:void(0)' title='Show Assets'>" + oData.assets_count + "</a>&nbsp;";
+                                html += "<a class='assetDetails' href='javascript:void(0)' title='Show Assets' style='color: #4361ee'>" + oData.assets_count + "</a>&nbsp;";/* style Added by AA*/
 
                                 $(nTd).html("<span class='action-column'>" + html + "</span>");
                             }

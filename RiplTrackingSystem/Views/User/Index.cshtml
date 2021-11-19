@@ -291,7 +291,7 @@
                             fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                                 var html = "";
                                 if (oData.active == 1)
-                                    html += "<span class='badge badge-primary'>Yes</span>";
+                                    html += "<span class='badge badge-success'>Yes</span>";/* success changed instaed of primary Added by AA*/
                                 else
                                     html += "<span class='badge badge-danger'>No</span>";
                                 $(nTd).html("<span class='action-column'>" + html + "</span>");
