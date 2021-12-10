@@ -512,3 +512,36 @@ input[type="date"] {
     background-position: calc(100% - 1.3em) center;
     background-repeat: no-repeat;
 }
+
+                                        /* Home page */
+
+.header {
+    margin-bottom: 10px!important;
+}
+
+.layout-px-spacing {
+    padding: 20px 39px 0px !important;
+}
+
+.widget-card-four {
+    border-radius: 25px;
+}
+.widget-card-four .w-progress-stats {
+    display: block;
+    margin-top: 10px;
+    width: 85%;
+}
+
+.widget-card-four .w-content {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.widget-card-four .w-header {
+    justify-content: space-around;
+}
+
+.widget.widget-chart-three {
+    border-radius: 25px!important;
+}

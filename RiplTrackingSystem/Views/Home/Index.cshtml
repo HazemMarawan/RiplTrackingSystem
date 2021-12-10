@@ -18,21 +18,23 @@
                     <div class="w-content">
 
                         <div class="w-info">
-                            <p class="value">@ViewBag.allAssts</p>
+                            <p class="value">@ViewBag.allAssts RIPL Assets</p>
                         </div>
+                        <!--
+    <div class="w-progress-stats">
 
+
+        <div class="">
+            <div class="w-icon text-center">
+                <p>RIPL Assets</p>
+            </div>
+        </div>
+
+    </div>
+    -->
                     </div>
 
-                    <div class="w-progress-stats">
-
-
-                        <div class="">
-                            <div class="w-icon">
-                                <p>RIPL Assets</p>
-                            </div>
-                        </div>
-
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -54,21 +56,21 @@
                         <div class="w-info">
                             <p class="value">@ViewBag.availabeAssets</p>
                         </div>
-
-                    </div>
-
-                    <div class="w-progress-stats">
-                        <div class="progress">
-                            <div class="progress-bar bg-gradient-secondary" role="progressbar" style="width:@ViewBag.availabeAssetsPercentage" aria-valuenow="@ViewBag.availabeAssetsPercentage" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-
-                        <div class="">
-                            <div class="w-icon">
-                                <p>@ViewBag.availabeAssetsPercentage</p>
+                        <div class="w-progress-stats">
+                            <div class="progress">
+                                <div class="progress-bar bg-gradient-secondary" role="progressbar" style="width:@ViewBag.availabeAssetsPercentage" aria-valuenow="@ViewBag.availabeAssetsPercentage" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
-                        </div>
 
+                            <div class="">
+                                <div class="w-icon">
+                                    <p>@ViewBag.availabeAssetsPercentage</p>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
+
+                   
                 </div>
             </div>
         </div>
@@ -90,21 +92,21 @@
                         <div class="w-info">
                             <p class="value">@(ViewBag.allAssts - ViewBag.availabeAssets)</p>
                         </div>
-
-                    </div>
-
-                    <div class="w-progress-stats">
-                        <div class="progress">
-                            <div class="progress-bar bg-gradient-secondary" role="progressbar" style="width:@ViewBag.usedAssetsPercentage" aria-valuenow="@ViewBag.usedAssetsPercentage" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-
-                        <div class="">
-                            <div class="w-icon">
-                                <p>@ViewBag.usedAssetsPercentage</p>
+                        <div class="w-progress-stats">
+                            <div class="progress">
+                                <div class="progress-bar bg-gradient-secondary" role="progressbar" style="width:@ViewBag.usedAssetsPercentage" aria-valuenow="@ViewBag.usedAssetsPercentage" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
-                        </div>
 
+                            <div class="">
+                                <div class="w-icon">
+                                    <p>@ViewBag.usedAssetsPercentage</p>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
+
+                   
                 </div>
             </div>
         </div>
@@ -389,7 +391,7 @@
                     var options = {
                         series: data.locationsAssets,
                         chart: {
-                            height: 360,
+                            height: 400,
                             type: 'pie',
                             toolbar: {
                                 show: false,
@@ -448,6 +450,11 @@
                         }],
                         xaxis: {
                             categories: data.xAxis,
+                        },
+                        plotOptions: {
+                            bar: {
+                                columnWidth: '40%'
+                            }
                         }
                     }
 
@@ -480,6 +487,11 @@
                         }],
                         xaxis: {
                             categories: data.xAxis,
+                        },
+                        plotOptions: {
+                            bar: {
+                                columnWidth: '40%'
+                            }
                         }
                     }
 
