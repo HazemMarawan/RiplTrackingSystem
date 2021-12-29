@@ -18,6 +18,7 @@ namespace RiplTrackingSystem.ViewModel
         public int lost_number_of_assets { get; set; }
         public int? parent_id { get; set; }
         public int? type { get; set; }
+        public int? active { get; set; }
         public int? canSendPluck { get; set; }
         public string displayedType { get; set; }
         public string displayedParent { get; set; }

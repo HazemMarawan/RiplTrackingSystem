@@ -58,13 +58,14 @@ namespace RiplTrackingSystem.Controllers
                                          phone = location.phone,
                                          parent_id = location.parent_id,
                                          type = location.type,
+                                         active = location.active,
                                          canSendPluck = location.can_send_pluck == null ? 0 : location.can_send_pluck,
                                          created_at = location.created_at,
                                          displayedType = (location.type == 1) ? "Company" : (location.type == 2) ? "Factory" : (location.type == 3) ? "Store" : "Distributor",
                                          displayedParent = (location.parent_id != null) ? db.locations.Where(l => l.id == location.parent_id).FirstOrDefault().name : "",
                                          actual_number_of_assets = db.companyAssetsRent.Where(s=>s.to_location == location.id && s.status == (int)AssetStatus.Received && s.due_date >= DateTime.Now).ToList().Count(),
                                          number_of_assets = db.rentOrders.Where(s=>s.location_id == location.id && s.due_date >= DateTime.Now).ToList().Count() != 0 ? db.rentOrders.Where(s => s.location_id == location.id && s.due_date >= DateTime.Now).Select(s=>s.assetes_count).Sum():0
-                                     }).Where(l => l.type == (int)LocationType.Company);
+                                     }).Where(l => l.type == (int)LocationType.Company && l.active == 1);
 
                 //Search    
                 if (!string.IsNullOrWhiteSpace(location_id))
@@ -292,7 +293,7 @@ namespace RiplTrackingSystem.Controllers
             int skip = start != null ? Convert.ToInt32(start) : 0;
 
             // Getting all data    
-            var factories = db.locations.Where(f => f.type == (int)LocationType.Factory)
+            var factories = db.locations.Where(f => f.type == (int)LocationType.Factory && f.active == 1)
             .Select(f => new locationViewModel
             {
                 id = f.id,
@@ -408,7 +409,7 @@ namespace RiplTrackingSystem.Controllers
             int skip = start != null ? Convert.ToInt32(start) : 0;
 
             // Getting all data    
-            var stores = db.locations.Where(f => f.type == (int)LocationType.Store)
+            var stores = db.locations.Where(f => f.type == (int)LocationType.Store && f.active == 1)
             .Select(f => new locationViewModel
             {
                 id = f.id,
@@ -525,7 +526,7 @@ namespace RiplTrackingSystem.Controllers
             int skip = start != null ? Convert.ToInt32(start) : 0;
 
             // Getting all data    
-            var distributors = db.locations.Where(f => f.type == (int)LocationType.Distributor)
+            var distributors = db.locations.Where(f => f.type == (int)LocationType.Distributor && f.active == 1)
             .Select(f => new locationViewModel
             {
                 id = f.id,
