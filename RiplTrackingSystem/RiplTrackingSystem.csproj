@@ -367,6 +367,10 @@
     <Compile Include="Migrations\202111110816531_updateTables.Designer.cs">
       <DependentUpon>202111110816531_updateTables.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112300058282_updateRoles.cs" />
+    <Compile Include="Migrations\202112300058282_updateRoles.Designer.cs">
+      <DependentUpon>202112300058282_updateRoles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Asset.cs" />
     <Compile Include="Models\LocationAttachment.cs" />
@@ -3074,6 +3078,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202111110816531_updateTables.resx">
       <DependentUpon>202111110816531_updateTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112300058282_updateRoles.resx">
+      <DependentUpon>202112300058282_updateRoles.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

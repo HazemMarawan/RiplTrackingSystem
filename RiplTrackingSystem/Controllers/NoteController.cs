@@ -21,7 +21,7 @@ namespace RiplTrackingSystem.Controllers
         public ActionResult Index()
         {
             User currentUser = Session["user"] as User;
-            List<NoteViewModel> notes = db.notes.Where(s => s.created_by == currentUser.id).Select(s => new NoteViewModel
+            List<NoteViewModel> notes = db.notes.Where(s => s.created_by == currentUser.id && s.active == 1).Select(s => new NoteViewModel
             {
                 id = s.id,
                 title = s.title,

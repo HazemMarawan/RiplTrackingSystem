@@ -128,6 +128,7 @@ namespace RiplTrackingSystem.Controllers
                 role.active = 1;
                 db.roles.Add(role);
                 db.SaveChanges();
+
                 return Json(new { message = "done", role = role,
                     icon = "success",
                     title = "Done",

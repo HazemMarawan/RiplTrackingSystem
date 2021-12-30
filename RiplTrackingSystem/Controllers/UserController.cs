@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using RiplTrackingSystem.Auth;
+using RiplTrackingSystem.Enums;
 using RiplTrackingSystem.Helpers;
 using RiplTrackingSystem.Models;
 using RiplTrackingSystem.ViewModel;
@@ -95,7 +96,7 @@ namespace RiplTrackingSystem.Controllers
             }
 
             ViewBag.roles = db.roles.Select(s => new { s.id, s.name }).ToList();
-            ViewBag.locations = db.locations.Select(s => new { s.id, s.name }).ToList();
+            ViewBag.companies = db.locations.Where(s=>s.type == (int)LocationType.Company).Select(s => new { s.id, s.name }).ToList();
             return View();
         }
         [HttpPost]

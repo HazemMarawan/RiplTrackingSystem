@@ -12,6 +12,7 @@ namespace RiplTrackingSystem.ViewModel
         public string description { get; set; }
         public string permissionIDs { get; set; }
         public int? active { get; set; }
+        public int? is_ripl { get; set; }
         public List<PermissionViewModel> permissions { get; set; }
         public DateTime? created_at { get; set; }
         public DateTime? updated_at { get; set; }

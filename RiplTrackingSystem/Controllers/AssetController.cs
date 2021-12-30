@@ -64,7 +64,7 @@ namespace RiplTrackingSystem.Controllers
                     string_created_at = s.created_at.ToString(),
                     active = s.active
 
-                });
+                }).Where(s=>s.active == 1);
 
                 //Search    
                 if (!string.IsNullOrEmpty(searchValue))

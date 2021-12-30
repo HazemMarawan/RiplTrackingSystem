@@ -42,8 +42,9 @@ namespace RiplTrackingSystem.Controllers
                                           nice_name = permission.nice_name,
                                           description = permission.description,
                                           permission_group_id = permissiongroup.id,
-                                          permission_group = permissiongroup.name
-                                      });
+                                          permission_group = permissiongroup.name,
+                                          active = permission.active
+                                      }).Where(s=>s.active == 1);
 
                 //Search    
                 if (!string.IsNullOrEmpty(searchValue))

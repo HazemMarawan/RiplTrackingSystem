@@ -16,6 +16,7 @@ namespace RiplTrackingSystem.Models
         public int created_by { get; set; }
         [DefaultValue(1)]
         public int? active { get; set; }
+        public int? is_ripl { get; set; }
         public DateTime? created_at { get; set; }
         public DateTime? updated_at { get; set; }
         public virtual ICollection<RolePermission> RolePermissions { get; set; }

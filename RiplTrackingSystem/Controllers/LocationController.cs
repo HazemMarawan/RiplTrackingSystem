@@ -119,7 +119,7 @@ namespace RiplTrackingSystem.Controllers
                 }, JsonRequestBehavior.AllowGet);
 
             }
-            ViewBag.roles = db.roles.Select(s => new { s.id, s.name }).ToList();
+            ViewBag.roles = db.roles.Where(s=>s.is_ripl == 0).Select(s => new { s.id, s.name }).ToList();
             ViewBag.locations = db.locations.Where(l => l.parent_id == null).Select(s => new { s.id, s.name }).ToList();
             return View();
         }
@@ -272,7 +272,7 @@ namespace RiplTrackingSystem.Controllers
 
             paths.Reverse();
 
-            ViewBag.roles = db.roles.Select(s => new { s.id, s.name }).ToList();
+            ViewBag.roles = db.roles.Where(s => s.is_ripl == 0).Select(s => new { s.id, s.name }).ToList();
             ViewBag.locations = db.locations.Select(s => new { s.id, s.name }).ToList();
             ViewBag.companyID = id;
             ViewBag.Paths = paths;
@@ -963,6 +963,42 @@ namespace RiplTrackingSystem.Controllers
             Response.AddHeader("content-disposition", "attachment: filename=" + "Report.xlsx");
             Response.BinaryWrite(Ep.GetAsByteArray());
             Response.End();
+        }
+
+        [HttpGet]
+        public JsonResult getLocationsByCompanyId(int? id)
+        {
+            List<locationViewModel> locations = new List<locationViewModel>();
+            List<RoleViewModel> roles = new List<RoleViewModel>();
+            if(id != null)
+            { 
+                locations = db.locations.Where(s => s.parent_id == id).Select(s => new locationViewModel
+                { 
+                    id= s.id,
+                    name = s.name
+                }).ToList();
+
+                roles = db.roles.Where(s => s.is_ripl == 0).Select(s => new RoleViewModel
+                {
+                    id = s.id,
+                    name = s.name
+                }).ToList();
+            }
+            else
+            {
+                locations = db.locations.Where(s=>s.id == -1).Select(s => new locationViewModel
+                {
+                    id = s.id,
+                    name = s.name
+                }).ToList();
+
+                roles = db.roles.Where(s => s.is_ripl == 1).Select(s => new RoleViewModel
+                {
+                    id = s.id,
+                    name = s.name
+                }).ToList();
+            }
+            return Json(new { locations = locations, roles= roles }, JsonRequestBehavior.AllowGet);
         }
     }
 }

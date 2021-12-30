@@ -39,8 +39,8 @@ namespace RiplTrackingSystem.Controllers
                                       created_at = task.created_at,
                                       created_by = task.created_by,
                                       stringCreatedToBy = user.full_name,
-
-                                  }).Where(s => s.created_by == currentUser.id).OrderByDescending(s => s.created_at).ToList();
+                                     active = task.active
+                                  }).Where(s => s.created_by == currentUser.id && s.active == 1).OrderByDescending(s => s.created_at).ToList();
 
             userTasks.myTasks = (from task in db.tasks
                              join user in db.users on task.created_by equals user.id
@@ -56,9 +56,9 @@ namespace RiplTrackingSystem.Controllers
                                  status = user_task.status,
                                  created_at = task.created_at,
                                  created_by = task.created_by,
-                                 stringCreatedToBy = user.full_name
-
-                             }).Where(s => s.user_id == currentUser.id).OrderByDescending(s => s.created_at).ToList();
+                                 stringCreatedToBy = user.full_name,
+                                 active = task.active
+                             }).Where(s => s.user_id == currentUser.id && s.active == 1).OrderByDescending(s => s.created_at).ToList();
             
             if (currentUser.location_id != null)
             {
